@@ -4,6 +4,26 @@
 
 Original `README.md` file moved to [PYTORCH_README.md](./PYTORCH_README.md)
 
+The project proposal can be found at [PROPOSAL.md](./PROPOSAL.md)
+
+### Project Structure
+- Relevant code for learned fusion:
+    - `torch/_inductor/autoheuristic/`
+    - `torch/_inductor/choices.py`
+    - `torch/_inductor/scheduler.py`
+    - `torch/_inductor/graph.py`
+    - `torch/_inductor/fx_passes/`
+    - `torch/fx/graph.py`
+- Relevant code for testing:
+    - `test/inductor/`
+    - `test/fx/`
+- `learned-fusion/models`: Contains the models used for learned fusion.
+- `learned-fusion/graph_gen`: Contains code for generating graphs.
+- `learned-fusion/data/graphs`: Contains generated graph data.
+- `learned-fusion/data/results`: Contains results from training and evaluation.
+- `learned-fusion/scripts`: Contains code for training/evaluating the learned fusion model.
+
+
 ### Building from Source
 1. Clone the repository
 2. Uninstall any existing installations of PyTorch by running the command `pip uninstall torch` until you see `WARNING: Skipping torch as it is not installed`.
