@@ -18,10 +18,12 @@ The project proposal can be found at [PROPOSAL.md](./PROPOSAL.md)
     - `test/inductor/`
     - `test/fx/`
 - `learned-fusion/models`: Contains the models used for learned fusion.
-- `learned-fusion/graph_gen`: Contains code for generating graphs.
+- `learned-fusion/scripts/graph_gen`: Contains code for generating graphs.
 - `learned-fusion/data/graphs`: Contains generated graph data.
 - `learned-fusion/data/results`: Contains results from training and evaluation.
-- `learned-fusion/scripts`: Contains code for training/evaluating the learned fusion model.
+- `learned-fusion/scripts/train`: Contains code for training the learned fusion model.
+- `learned-fusion/scripts/eval`: Contains code for evaluating the learned fusion model.
+
 
 
 ### Building from Source
