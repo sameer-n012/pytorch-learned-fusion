@@ -1,0 +1,2 @@
+op5_op51_op0_op1_op2_op4_op6, op48: (2, False, 49152, -44)
+op50, op44_op45_op47_op52_op53_op54_op56_op886_op57: (2, False, 49152, -789)

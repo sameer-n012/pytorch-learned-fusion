@@ -1,0 +1,50 @@
+
+# ========================================op0 START======================================== #
+op0: ExternKernelSchedulerNode(ExternKernelOut)
+op0.writes = [StarDep(name='buf0', mode=None)]
+op0.unmet_dependencies = []
+op0.met_dependencies = [StarDep(name='primals_1', mode=None), StarDep(name='primals_2', mode=None)]
+op0.outputs = [
+    buf0: ExternKernelOut
+    buf0.layout = FixedLayout('cuda:0', torch.float32, size=[1, 768], stride=[768, 1])
+    buf0.users = [NodeUser(node=SchedulerNode(name='op1'), can_inplace=True, is_weak=False)]
+]
+op0.node.kernel = extern_kernels.mm
+# ========================================op0 END======================================== #
+
+
+
+
+# ========================================op1 START======================================== #
+op1: SchedulerNode(ComputedBuffer)
+op1.writes = [MemoryDep('buf1', d0, {d0: 768})]
+op1.unmet_dependencies = [MemoryDep('buf0', d0, {d0: 768})]
+op1.met_dependencies = [MemoryDep('primals_3', d0, {d0: 768})]
+op1.outputs = [
+    buf1: ComputedBuffer
+    buf1.layout = FixedLayout('cuda:0', torch.float32, size=[1, 768], stride=[768, 1])
+    buf1.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op1.group.device = cuda:0
+op1.group.iteration = (768, 1)
+op1.sizes = ([768], [])
+primals_3_layout = FixedLayout('cuda:0', torch.float32, size=[768], stride=[1])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[1, 768], stride=[768, 1])
+buf1_layout = FixedLayout('cuda:0', torch.float32, size=[1, 768], stride=[768, 1])
+class op1_loop_body:
+    var_ranges = {p0: 768}
+    index0 = p0
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('primals_3', get_index)
+        get_index_1 = self.get_index('index0')
+        load_1 = ops.load('buf0', get_index_1)
+        add = ops.add(load, load_1)
+        tanh = ops.tanh(add)
+        get_index_2 = self.get_index('index0')
+        store = ops.store('buf1', get_index_2, tanh, None)
+        return store
+# ========================================op1 END======================================== #
+
+
+

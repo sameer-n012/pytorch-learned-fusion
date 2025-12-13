@@ -14,11 +14,12 @@ import pstats
 import shutil
 import traceback
 from collections.abc import Callable, Iterator, Sequence
-from typing import Any, IO, Optional, Union
+from typing import IO, Any, Optional, Union
 from unittest.mock import patch
 
-import torch
 from functorch.compile import draw_graph, get_aot_graph_name, get_graph_being_compiled
+
+import torch
 from torch import fx
 from torch._dynamo.repro.after_aot import save_graph_repro
 from torch._dynamo.utils import get_debug_dir
@@ -27,7 +28,7 @@ from torch._logging import getArtifactLogger
 from torch._logging._internal import trace_structured
 from torch._utils_internal import signpost_event
 from torch.fx.graph_module import GraphModule
-from torch.fx.passes.shape_prop import _extract_tensor_metadata, TensorMetadata
+from torch.fx.passes.shape_prop import TensorMetadata, _extract_tensor_metadata
 from torch.fx.passes.tools_common import legalize_graph
 from torch.types import FileLike
 from torch.utils._ordered_set import OrderedSet
@@ -43,7 +44,6 @@ from .scheduler import (
     SchedulerNode,
 )
 from .virtualized import V
-
 
 log = logging.getLogger(__name__)
 
@@ -593,12 +593,16 @@ class DebugFormatter:
     def _write_ir(nodes: SchedulerNodeList) -> str:
         buf = io.StringIO()
         for node in nodes:
+            buf.write(f"\n# {'=' * 40}{node.get_name()} START{'=' * 40} #\n")
             buf.write(node.debug_str())
+            buf.write(f"\n# {'=' * 40}{node.get_name()} END{'=' * 40} #\n")
             buf.write("\n\n\n")
         return buf.getvalue()
 
     def graph_diagram(self, nodes: SchedulerNodeList) -> None:
-        draw_buffers(nodes, fname=self.filename("graph_diagram.svg"))
+        # sameer-n012: removed graph drawing to save time and avoid dependency on graphviz
+        # draw_buffers(nodes, fname=self.filename("graph_diagram.svg"))
+        return
 
     def draw_orig_fx_graph(
         self,

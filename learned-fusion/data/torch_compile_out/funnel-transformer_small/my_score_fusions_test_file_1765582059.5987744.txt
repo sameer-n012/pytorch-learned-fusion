@@ -1,0 +1,5 @@
+op1, op2: (2, True, 24576, -1)
+op1, op5: (2, False, 24608, -3)
+op0, op1: (2, False, 24576, -1)
+op0, op2: (2, False, 24576, -2)
+op2, op4: (2, False, 32, -1)

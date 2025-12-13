@@ -1,0 +1,2 @@
+op0_op1_op2_op4, op5_op7_op8_op10: (2, True, 24624, -8)
+op5_op7_op8_op10, op11: (2, False, 24624, -5)

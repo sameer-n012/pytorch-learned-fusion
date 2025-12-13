@@ -1,0 +1,1 @@
+op0_op1_op2_op3_op4, op6: (2, False, 32832, -6)

@@ -1,0 +1,54 @@
+
+# ========================================op0 START======================================== #
+op0: SchedulerNode(ComputedBuffer)
+op0.writes = [MemoryDep('buf0', c0, {c0: 4})]
+op0.unmet_dependencies = []
+op0.met_dependencies = [MemoryDep('arg0_1', 2*((c0 - 1)) + 1, {c0: 4})]
+op0.outputs = [
+    buf0: ComputedBuffer
+    buf0.layout = FixedLayout('cuda:0', torch.float32, size=[4], stride=[1])
+    buf0.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op0.group.device = cuda:0
+op0.group.iteration = (4, 1)
+op0.sizes = ((4,), ())
+arg0_1_layout = FixedLayout('cuda:0', torch.float32, size=[8], stride=[1])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[4], stride=[1])
+class op0_loop_body:
+    var_ranges = {p0: 4}
+    index0 = p0
+    index1 = 2*((p0 - 1)) + 1
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int64)
+        constant = ops.constant(0, torch.int64)
+        ge = ops.ge(index_expr, constant)
+        get_index_1 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_1, torch.int64)
+        constant_1 = ops.constant(1, torch.int64)
+        lt = ops.lt(index_expr_1, constant_1)
+        masked_subblock1 = self.masked_subblock1(lt, 0.0)
+        get_index_2 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_2, torch.int64)
+        constant_2 = ops.constant(1, torch.int64)
+        ge_1 = ops.ge(index_expr_2, constant_2)
+        get_index_3 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_3, torch.int64)
+        constant_3 = ops.constant(4, torch.int64)
+        lt_1 = ops.lt(index_expr_3, constant_3)
+        masked_subblock2 = self.masked_subblock2(ge_1, 0.0)
+        where = ops.where(lt, masked_subblock1, masked_subblock2)
+        get_index_4 = self.get_index('index0')
+        store = ops.store('buf0', get_index_4, where, None)
+        return store
+    def masked_subblock1(self, ops):
+        constant = ops.constant(-1.0, torch.float32)
+        return constant
+    def masked_subblock2(self, ops):
+        get_index = self.get_index('index1')
+        load = ops.load('arg0_1', get_index)
+        return load
+# ========================================op0 END======================================== #
+
+
+

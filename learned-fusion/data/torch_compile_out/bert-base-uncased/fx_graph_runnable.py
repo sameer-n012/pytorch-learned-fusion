@@ -1,5 +1,6 @@
 
 import os
+os.environ['TORCHINDUCTOR_CACHE_DIR'] = '/home/ec2-user/final/pytorch-learned-fusion/learned-fusion/_torch_cache'
 os.environ['TORCH_COMPILE_DEBUG'] = '1'
 os.environ['TORCH_LOGS'] = '+inductor,graph,graph_code,aot_graphs,output_code'
 os.environ['TORCHINDUCTOR_AUTOGRAD_CACHE'] = '1'
@@ -7,9 +8,9 @@ os.environ['TORCHINDUCTOR_FX_GRAPH_CACHE'] = '1'
 os.environ['TORCHINDUCTOR_SAVE_OPERATORS'] = '1'
 os.environ['TRITON_SAVE_TTIR'] = '1'
 os.environ['TORCHINDUCTOR_FX_COMPILE_MODE'] = 'SERIALIZE'
-os.environ['TORCHINDUCTOR_CACHE_DIR'] = '/home/sameern3/torch-graph-gen/_torch_cache'
-os.environ['TRITON_CACHE_DIR'] = 'data/torch_compile_debug/bert-base-uncased/triton_kernels'
-os.environ['TORCH_INDUCTOR_LOG_DIR'] = 'data/torch_compile_debug/bert-base-uncased/logs'
+os.environ['TRITON_CACHE_DIR'] = 'data/torch_compile_out/bert-base-uncased/triton_kernels'
+os.environ['TORCH_INDUCTOR_LOG_DIR'] = 'data/torch_compile_out/bert-base-uncased/logs'
+os.environ['MY_TORCH_MODEL_OUTPUT_DIR'] = 'data/torch_compile_out/bert-base-uncased'
 
 import torch
 from torch import tensor, device
@@ -24,6 +25,8 @@ import torch._dynamo.config
 import torch._inductor.config
 import torch._functorch.config
 import torch.fx.experimental._config
+torch._dynamo.config.replay_side_effects = True
+torch._dynamo.config.side_effect_replay_policy = 'silent'
 torch._dynamo.config.specialize_int = False
 torch._dynamo.config.specialize_float = False
 torch._dynamo.config.assume_static_by_default = True
@@ -40,6 +43,7 @@ torch._functorch.config.functionalize_rng_ops = False
 torch._functorch.config.debug_partitioner = True
 torch._functorch.config.fake_tensor_allow_unsafe_data_ptr_access = True
 torch._functorch.config.unlift_effect_tokens = True
+torch._functorch.config.selective_decompose = False
 
 
 
@@ -48,15 +52,20 @@ isolate_fails_code_str = None
 
 
 
-# torch version: 2.9.1+cu128
-# torch cuda version: 12.8
-# torch git version: 5811a8d7da873dd699ff6687092c225caffcf1bb
+# torch version: 2.10.0a0+gite9d6fa5
+# torch cuda version: 12.6
+# torch git version: e9d6fa5266a35e7d1969d8d9fb0416da65e82f1e
 
 
 # CUDA Info: 
-# nvcc not found
+# nvcc: NVIDIA (R) Cuda compiler driver 
+# Copyright (c) 2005-2024 NVIDIA Corporation 
+# Built on Tue_Oct_29_23:50:19_PDT_2024 
+# Cuda compilation tools, release 12.6, V12.6.85 
+# Build cuda_12.6.r12.6/compiler.35059454_0 
+
 # GPU Hardware Info: 
-# NVIDIA A100-SXM4-80GB : 1 
+# NVIDIA A10G : 1 
 
 
 from torch.nn import *

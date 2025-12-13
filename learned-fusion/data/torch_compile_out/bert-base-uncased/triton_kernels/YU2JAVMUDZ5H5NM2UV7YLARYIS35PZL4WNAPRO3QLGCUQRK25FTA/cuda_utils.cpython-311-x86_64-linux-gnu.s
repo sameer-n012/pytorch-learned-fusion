@@ -1,18 +1,18 @@
 
-data/torch_compile_debug/bert-base-uncased/triton_kernels/YU2JAVMUDZ5H5NM2UV7YLARYIS35PZL4WNAPRO3QLGCUQRK25FTA/cuda_utils.cpython-311-x86_64-linux-gnu.so:     file format elf64-x86-64
+data/torch_compile_out/bert-base-uncased/triton_kernels/YU2JAVMUDZ5H5NM2UV7YLARYIS35PZL4WNAPRO3QLGCUQRK25FTA/cuda_utils.cpython-311-x86_64-linux-gnu.so:     file format elf64-x86-64
 
 
 Disassembly of section .init:
 
 0000000000002000 <_init>:
-    2000:	f3 0f 1e fa          	endbr64 
+    2000:	f3 0f 1e fa          	endbr64
     2004:	48 83 ec 08          	sub    $0x8,%rsp
     2008:	48 8b 05 d1 3f 00 00 	mov    0x3fd1(%rip),%rax        # 5fe0 <__gmon_start__@Base>
     200f:	48 85 c0             	test   %rax,%rax
     2012:	74 02                	je     2016 <_init+0x16>
     2014:	ff d0                	call   *%rax
     2016:	48 83 c4 08          	add    $0x8,%rsp
-    201a:	c3                   	ret    
+    201a:	c3                   	ret
 
 Disassembly of section .plt:
 
@@ -20,171 +20,171 @@ Disassembly of section .plt:
     2020:	ff 35 e2 3f 00 00    	push   0x3fe2(%rip)        # 6008 <_GLOBAL_OFFSET_TABLE_+0x8>
     2026:	f2 ff 25 e3 3f 00 00 	bnd jmp *0x3fe3(%rip)        # 6010 <_GLOBAL_OFFSET_TABLE_+0x10>
     202d:	0f 1f 00             	nopl   (%rax)
-    2030:	f3 0f 1e fa          	endbr64 
+    2030:	f3 0f 1e fa          	endbr64
     2034:	68 00 00 00 00       	push   $0x0
     2039:	f2 e9 e1 ff ff ff    	bnd jmp 2020 <_init+0x20>
     203f:	90                   	nop
-    2040:	f3 0f 1e fa          	endbr64 
+    2040:	f3 0f 1e fa          	endbr64
     2044:	68 01 00 00 00       	push   $0x1
     2049:	f2 e9 d1 ff ff ff    	bnd jmp 2020 <_init+0x20>
     204f:	90                   	nop
-    2050:	f3 0f 1e fa          	endbr64 
+    2050:	f3 0f 1e fa          	endbr64
     2054:	68 02 00 00 00       	push   $0x2
     2059:	f2 e9 c1 ff ff ff    	bnd jmp 2020 <_init+0x20>
     205f:	90                   	nop
-    2060:	f3 0f 1e fa          	endbr64 
+    2060:	f3 0f 1e fa          	endbr64
     2064:	68 03 00 00 00       	push   $0x3
     2069:	f2 e9 b1 ff ff ff    	bnd jmp 2020 <_init+0x20>
     206f:	90                   	nop
-    2070:	f3 0f 1e fa          	endbr64 
+    2070:	f3 0f 1e fa          	endbr64
     2074:	68 04 00 00 00       	push   $0x4
     2079:	f2 e9 a1 ff ff ff    	bnd jmp 2020 <_init+0x20>
     207f:	90                   	nop
-    2080:	f3 0f 1e fa          	endbr64 
+    2080:	f3 0f 1e fa          	endbr64
     2084:	68 05 00 00 00       	push   $0x5
     2089:	f2 e9 91 ff ff ff    	bnd jmp 2020 <_init+0x20>
     208f:	90                   	nop
-    2090:	f3 0f 1e fa          	endbr64 
+    2090:	f3 0f 1e fa          	endbr64
     2094:	68 06 00 00 00       	push   $0x6
     2099:	f2 e9 81 ff ff ff    	bnd jmp 2020 <_init+0x20>
     209f:	90                   	nop
-    20a0:	f3 0f 1e fa          	endbr64 
+    20a0:	f3 0f 1e fa          	endbr64
     20a4:	68 07 00 00 00       	push   $0x7
     20a9:	f2 e9 71 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20af:	90                   	nop
-    20b0:	f3 0f 1e fa          	endbr64 
+    20b0:	f3 0f 1e fa          	endbr64
     20b4:	68 08 00 00 00       	push   $0x8
     20b9:	f2 e9 61 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20bf:	90                   	nop
-    20c0:	f3 0f 1e fa          	endbr64 
+    20c0:	f3 0f 1e fa          	endbr64
     20c4:	68 09 00 00 00       	push   $0x9
     20c9:	f2 e9 51 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20cf:	90                   	nop
-    20d0:	f3 0f 1e fa          	endbr64 
+    20d0:	f3 0f 1e fa          	endbr64
     20d4:	68 0a 00 00 00       	push   $0xa
     20d9:	f2 e9 41 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20df:	90                   	nop
-    20e0:	f3 0f 1e fa          	endbr64 
+    20e0:	f3 0f 1e fa          	endbr64
     20e4:	68 0b 00 00 00       	push   $0xb
     20e9:	f2 e9 31 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20ef:	90                   	nop
-    20f0:	f3 0f 1e fa          	endbr64 
+    20f0:	f3 0f 1e fa          	endbr64
     20f4:	68 0c 00 00 00       	push   $0xc
     20f9:	f2 e9 21 ff ff ff    	bnd jmp 2020 <_init+0x20>
     20ff:	90                   	nop
-    2100:	f3 0f 1e fa          	endbr64 
+    2100:	f3 0f 1e fa          	endbr64
     2104:	68 0d 00 00 00       	push   $0xd
     2109:	f2 e9 11 ff ff ff    	bnd jmp 2020 <_init+0x20>
     210f:	90                   	nop
-    2110:	f3 0f 1e fa          	endbr64 
+    2110:	f3 0f 1e fa          	endbr64
     2114:	68 0e 00 00 00       	push   $0xe
     2119:	f2 e9 01 ff ff ff    	bnd jmp 2020 <_init+0x20>
     211f:	90                   	nop
-    2120:	f3 0f 1e fa          	endbr64 
+    2120:	f3 0f 1e fa          	endbr64
     2124:	68 0f 00 00 00       	push   $0xf
     2129:	f2 e9 f1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     212f:	90                   	nop
-    2130:	f3 0f 1e fa          	endbr64 
+    2130:	f3 0f 1e fa          	endbr64
     2134:	68 10 00 00 00       	push   $0x10
     2139:	f2 e9 e1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     213f:	90                   	nop
-    2140:	f3 0f 1e fa          	endbr64 
+    2140:	f3 0f 1e fa          	endbr64
     2144:	68 11 00 00 00       	push   $0x11
     2149:	f2 e9 d1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     214f:	90                   	nop
-    2150:	f3 0f 1e fa          	endbr64 
+    2150:	f3 0f 1e fa          	endbr64
     2154:	68 12 00 00 00       	push   $0x12
     2159:	f2 e9 c1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     215f:	90                   	nop
-    2160:	f3 0f 1e fa          	endbr64 
+    2160:	f3 0f 1e fa          	endbr64
     2164:	68 13 00 00 00       	push   $0x13
     2169:	f2 e9 b1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     216f:	90                   	nop
-    2170:	f3 0f 1e fa          	endbr64 
+    2170:	f3 0f 1e fa          	endbr64
     2174:	68 14 00 00 00       	push   $0x14
     2179:	f2 e9 a1 fe ff ff    	bnd jmp 2020 <_init+0x20>
     217f:	90                   	nop
-    2180:	f3 0f 1e fa          	endbr64 
+    2180:	f3 0f 1e fa          	endbr64
     2184:	68 15 00 00 00       	push   $0x15
     2189:	f2 e9 91 fe ff ff    	bnd jmp 2020 <_init+0x20>
     218f:	90                   	nop
-    2190:	f3 0f 1e fa          	endbr64 
+    2190:	f3 0f 1e fa          	endbr64
     2194:	68 16 00 00 00       	push   $0x16
     2199:	f2 e9 81 fe ff ff    	bnd jmp 2020 <_init+0x20>
     219f:	90                   	nop
-    21a0:	f3 0f 1e fa          	endbr64 
+    21a0:	f3 0f 1e fa          	endbr64
     21a4:	68 17 00 00 00       	push   $0x17
     21a9:	f2 e9 71 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21af:	90                   	nop
-    21b0:	f3 0f 1e fa          	endbr64 
+    21b0:	f3 0f 1e fa          	endbr64
     21b4:	68 18 00 00 00       	push   $0x18
     21b9:	f2 e9 61 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21bf:	90                   	nop
-    21c0:	f3 0f 1e fa          	endbr64 
+    21c0:	f3 0f 1e fa          	endbr64
     21c4:	68 19 00 00 00       	push   $0x19
     21c9:	f2 e9 51 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21cf:	90                   	nop
-    21d0:	f3 0f 1e fa          	endbr64 
+    21d0:	f3 0f 1e fa          	endbr64
     21d4:	68 1a 00 00 00       	push   $0x1a
     21d9:	f2 e9 41 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21df:	90                   	nop
-    21e0:	f3 0f 1e fa          	endbr64 
+    21e0:	f3 0f 1e fa          	endbr64
     21e4:	68 1b 00 00 00       	push   $0x1b
     21e9:	f2 e9 31 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21ef:	90                   	nop
-    21f0:	f3 0f 1e fa          	endbr64 
+    21f0:	f3 0f 1e fa          	endbr64
     21f4:	68 1c 00 00 00       	push   $0x1c
     21f9:	f2 e9 21 fe ff ff    	bnd jmp 2020 <_init+0x20>
     21ff:	90                   	nop
-    2200:	f3 0f 1e fa          	endbr64 
+    2200:	f3 0f 1e fa          	endbr64
     2204:	68 1d 00 00 00       	push   $0x1d
     2209:	f2 e9 11 fe ff ff    	bnd jmp 2020 <_init+0x20>
     220f:	90                   	nop
-    2210:	f3 0f 1e fa          	endbr64 
+    2210:	f3 0f 1e fa          	endbr64
     2214:	68 1e 00 00 00       	push   $0x1e
     2219:	f2 e9 01 fe ff ff    	bnd jmp 2020 <_init+0x20>
     221f:	90                   	nop
-    2220:	f3 0f 1e fa          	endbr64 
+    2220:	f3 0f 1e fa          	endbr64
     2224:	68 1f 00 00 00       	push   $0x1f
     2229:	f2 e9 f1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     222f:	90                   	nop
-    2230:	f3 0f 1e fa          	endbr64 
+    2230:	f3 0f 1e fa          	endbr64
     2234:	68 20 00 00 00       	push   $0x20
     2239:	f2 e9 e1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     223f:	90                   	nop
-    2240:	f3 0f 1e fa          	endbr64 
+    2240:	f3 0f 1e fa          	endbr64
     2244:	68 21 00 00 00       	push   $0x21
     2249:	f2 e9 d1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     224f:	90                   	nop
-    2250:	f3 0f 1e fa          	endbr64 
+    2250:	f3 0f 1e fa          	endbr64
     2254:	68 22 00 00 00       	push   $0x22
     2259:	f2 e9 c1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     225f:	90                   	nop
-    2260:	f3 0f 1e fa          	endbr64 
+    2260:	f3 0f 1e fa          	endbr64
     2264:	68 23 00 00 00       	push   $0x23
     2269:	f2 e9 b1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     226f:	90                   	nop
-    2270:	f3 0f 1e fa          	endbr64 
+    2270:	f3 0f 1e fa          	endbr64
     2274:	68 24 00 00 00       	push   $0x24
     2279:	f2 e9 a1 fd ff ff    	bnd jmp 2020 <_init+0x20>
     227f:	90                   	nop
-    2280:	f3 0f 1e fa          	endbr64 
+    2280:	f3 0f 1e fa          	endbr64
     2284:	68 25 00 00 00       	push   $0x25
     2289:	f2 e9 91 fd ff ff    	bnd jmp 2020 <_init+0x20>
     228f:	90                   	nop
-    2290:	f3 0f 1e fa          	endbr64 
+    2290:	f3 0f 1e fa          	endbr64
     2294:	68 26 00 00 00       	push   $0x26
     2299:	f2 e9 81 fd ff ff    	bnd jmp 2020 <_init+0x20>
     229f:	90                   	nop
-    22a0:	f3 0f 1e fa          	endbr64 
+    22a0:	f3 0f 1e fa          	endbr64
     22a4:	68 27 00 00 00       	push   $0x27
     22a9:	f2 e9 71 fd ff ff    	bnd jmp 2020 <_init+0x20>
     22af:	90                   	nop
-    22b0:	f3 0f 1e fa          	endbr64 
+    22b0:	f3 0f 1e fa          	endbr64
     22b4:	68 28 00 00 00       	push   $0x28
     22b9:	f2 e9 61 fd ff ff    	bnd jmp 2020 <_init+0x20>
     22bf:	90                   	nop
-    22c0:	f3 0f 1e fa          	endbr64 
+    22c0:	f3 0f 1e fa          	endbr64
     22c4:	68 29 00 00 00       	push   $0x29
     22c9:	f2 e9 51 fd ff ff    	bnd jmp 2020 <_init+0x20>
     22cf:	90                   	nop
@@ -192,219 +192,219 @@ Disassembly of section .plt:
 Disassembly of section .plt.got:
 
 00000000000022d0 <__cxa_finalize@plt>:
-    22d0:	f3 0f 1e fa          	endbr64 
+    22d0:	f3 0f 1e fa          	endbr64
     22d4:	f2 ff 25 1d 3d 00 00 	bnd jmp *0x3d1d(%rip)        # 5ff8 <__cxa_finalize@GLIBC_2.2.5>
     22db:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 Disassembly of section .plt.sec:
 
 00000000000022e0 <cuModuleGetFunction@plt>:
-    22e0:	f3 0f 1e fa          	endbr64 
+    22e0:	f3 0f 1e fa          	endbr64
     22e4:	f2 ff 25 2d 3d 00 00 	bnd jmp *0x3d2d(%rip)        # 6018 <cuModuleGetFunction@Base>
     22eb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000022f0 <cuFuncSetAttribute@plt>:
-    22f0:	f3 0f 1e fa          	endbr64 
+    22f0:	f3 0f 1e fa          	endbr64
     22f4:	f2 ff 25 25 3d 00 00 	bnd jmp *0x3d25(%rip)        # 6020 <cuFuncSetAttribute@Base>
     22fb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002300 <PyObject_Init@plt>:
-    2300:	f3 0f 1e fa          	endbr64 
+    2300:	f3 0f 1e fa          	endbr64
     2304:	f2 ff 25 1d 3d 00 00 	bnd jmp *0x3d1d(%rip)        # 6028 <PyObject_Init@Base>
     230b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002310 <cuModuleLoadData@plt>:
-    2310:	f3 0f 1e fa          	endbr64 
+    2310:	f3 0f 1e fa          	endbr64
     2314:	f2 ff 25 15 3d 00 00 	bnd jmp *0x3d15(%rip)        # 6030 <cuModuleLoadData@Base>
     231b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002320 <dlerror@plt>:
-    2320:	f3 0f 1e fa          	endbr64 
+    2320:	f3 0f 1e fa          	endbr64
     2324:	f2 ff 25 0d 3d 00 00 	bnd jmp *0x3d0d(%rip)        # 6038 <dlerror@GLIBC_2.34>
     232b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002330 <free@plt>:
-    2330:	f3 0f 1e fa          	endbr64 
+    2330:	f3 0f 1e fa          	endbr64
     2334:	f2 ff 25 05 3d 00 00 	bnd jmp *0x3d05(%rip)        # 6040 <free@GLIBC_2.2.5>
     233b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002340 <cuFuncGetAttribute@plt>:
-    2340:	f3 0f 1e fa          	endbr64 
+    2340:	f3 0f 1e fa          	endbr64
     2344:	f2 ff 25 fd 3c 00 00 	bnd jmp *0x3cfd(%rip)        # 6048 <cuFuncGetAttribute@Base>
     234b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002350 <cuCtxSetCurrent@plt>:
-    2350:	f3 0f 1e fa          	endbr64 
+    2350:	f3 0f 1e fa          	endbr64
     2354:	f2 ff 25 f5 3c 00 00 	bnd jmp *0x3cf5(%rip)        # 6050 <cuCtxSetCurrent@Base>
     235b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002360 <PyGILState_Release@plt>:
-    2360:	f3 0f 1e fa          	endbr64 
+    2360:	f3 0f 1e fa          	endbr64
     2364:	f2 ff 25 ed 3c 00 00 	bnd jmp *0x3ced(%rip)        # 6058 <PyGILState_Release@Base>
     236b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002370 <PyEval_RestoreThread@plt>:
-    2370:	f3 0f 1e fa          	endbr64 
+    2370:	f3 0f 1e fa          	endbr64
     2374:	f2 ff 25 e5 3c 00 00 	bnd jmp *0x3ce5(%rip)        # 6060 <PyEval_RestoreThread@Base>
     237b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002380 <_Py_Dealloc@plt>:
-    2380:	f3 0f 1e fa          	endbr64 
+    2380:	f3 0f 1e fa          	endbr64
     2384:	f2 ff 25 dd 3c 00 00 	bnd jmp *0x3cdd(%rip)        # 6068 <_Py_Dealloc@Base>
     238b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002390 <PyModule_AddFunctions@plt>:
-    2390:	f3 0f 1e fa          	endbr64 
+    2390:	f3 0f 1e fa          	endbr64
     2394:	f2 ff 25 d5 3c 00 00 	bnd jmp *0x3cd5(%rip)        # 6070 <PyModule_AddFunctions@Base>
     239b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023a0 <PyErr_NoMemory@plt>:
-    23a0:	f3 0f 1e fa          	endbr64 
+    23a0:	f3 0f 1e fa          	endbr64
     23a4:	f2 ff 25 cd 3c 00 00 	bnd jmp *0x3ccd(%rip)        # 6078 <PyErr_NoMemory@Base>
     23ab:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023b0 <__stack_chk_fail@plt>:
-    23b0:	f3 0f 1e fa          	endbr64 
+    23b0:	f3 0f 1e fa          	endbr64
     23b4:	f2 ff 25 c5 3c 00 00 	bnd jmp *0x3cc5(%rip)        # 6080 <__stack_chk_fail@GLIBC_2.4>
     23bb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023c0 <PyErr_SetString@plt>:
-    23c0:	f3 0f 1e fa          	endbr64 
+    23c0:	f3 0f 1e fa          	endbr64
     23c4:	f2 ff 25 bd 3c 00 00 	bnd jmp *0x3cbd(%rip)        # 6088 <PyErr_SetString@Base>
     23cb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023d0 <__assert_fail@plt>:
-    23d0:	f3 0f 1e fa          	endbr64 
+    23d0:	f3 0f 1e fa          	endbr64
     23d4:	f2 ff 25 b5 3c 00 00 	bnd jmp *0x3cb5(%rip)        # 6090 <__assert_fail@GLIBC_2.2.5>
     23db:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023e0 <PyGILState_Ensure@plt>:
-    23e0:	f3 0f 1e fa          	endbr64 
+    23e0:	f3 0f 1e fa          	endbr64
     23e4:	f2 ff 25 ad 3c 00 00 	bnd jmp *0x3cad(%rip)        # 6098 <PyGILState_Ensure@Base>
     23eb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000023f0 <cuDeviceGet@plt>:
-    23f0:	f3 0f 1e fa          	endbr64 
+    23f0:	f3 0f 1e fa          	endbr64
     23f4:	f2 ff 25 a5 3c 00 00 	bnd jmp *0x3ca5(%rip)        # 60a0 <cuDeviceGet@Base>
     23fb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002400 <PyType_Ready@plt>:
-    2400:	f3 0f 1e fa          	endbr64 
+    2400:	f3 0f 1e fa          	endbr64
     2404:	f2 ff 25 9d 3c 00 00 	bnd jmp *0x3c9d(%rip)        # 60a8 <PyType_Ready@Base>
     240b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002410 <PyLong_FromLong@plt>:
-    2410:	f3 0f 1e fa          	endbr64 
+    2410:	f3 0f 1e fa          	endbr64
     2414:	f2 ff 25 95 3c 00 00 	bnd jmp *0x3c95(%rip)        # 60b0 <PyLong_FromLong@Base>
     241b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002420 <dlopen@plt>:
-    2420:	f3 0f 1e fa          	endbr64 
+    2420:	f3 0f 1e fa          	endbr64
     2424:	f2 ff 25 8d 3c 00 00 	bnd jmp *0x3c8d(%rip)        # 60b8 <dlopen@GLIBC_2.34>
     242b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002430 <cuDevicePrimaryCtxRetain@plt>:
-    2430:	f3 0f 1e fa          	endbr64 
+    2430:	f3 0f 1e fa          	endbr64
     2434:	f2 ff 25 85 3c 00 00 	bnd jmp *0x3c85(%rip)        # 60c0 <cuDevicePrimaryCtxRetain@Base>
     243b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002440 <PyErr_Occurred@plt>:
-    2440:	f3 0f 1e fa          	endbr64 
+    2440:	f3 0f 1e fa          	endbr64
     2444:	f2 ff 25 7d 3c 00 00 	bnd jmp *0x3c7d(%rip)        # 60c8 <PyErr_Occurred@Base>
     244b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002450 <PyModule_Create2@plt>:
-    2450:	f3 0f 1e fa          	endbr64 
+    2450:	f3 0f 1e fa          	endbr64
     2454:	f2 ff 25 75 3c 00 00 	bnd jmp *0x3c75(%rip)        # 60d0 <PyModule_Create2@Base>
     245b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002460 <PyLong_AsLong@plt>:
-    2460:	f3 0f 1e fa          	endbr64 
+    2460:	f3 0f 1e fa          	endbr64
     2464:	f2 ff 25 6d 3c 00 00 	bnd jmp *0x3c6d(%rip)        # 60d8 <PyLong_AsLong@Base>
     246b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002470 <PyObject_CallObject@plt>:
-    2470:	f3 0f 1e fa          	endbr64 
+    2470:	f3 0f 1e fa          	endbr64
     2474:	f2 ff 25 65 3c 00 00 	bnd jmp *0x3c65(%rip)        # 60e0 <PyObject_CallObject@Base>
     247b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002480 <_PyArg_ParseTuple_SizeT@plt>:
-    2480:	f3 0f 1e fa          	endbr64 
+    2480:	f3 0f 1e fa          	endbr64
     2484:	f2 ff 25 5d 3c 00 00 	bnd jmp *0x3c5d(%rip)        # 60e8 <_PyArg_ParseTuple_SizeT@Base>
     248b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002490 <cuCtxSetLimit@plt>:
-    2490:	f3 0f 1e fa          	endbr64 
+    2490:	f3 0f 1e fa          	endbr64
     2494:	f2 ff 25 55 3c 00 00 	bnd jmp *0x3c55(%rip)        # 60f0 <cuCtxSetLimit@Base>
     249b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024a0 <cuGetErrorString@plt>:
-    24a0:	f3 0f 1e fa          	endbr64 
+    24a0:	f3 0f 1e fa          	endbr64
     24a4:	f2 ff 25 4d 3c 00 00 	bnd jmp *0x3c4d(%rip)        # 60f8 <cuGetErrorString@Base>
     24ab:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024b0 <__strcpy_chk@plt>:
-    24b0:	f3 0f 1e fa          	endbr64 
+    24b0:	f3 0f 1e fa          	endbr64
     24b4:	f2 ff 25 45 3c 00 00 	bnd jmp *0x3c45(%rip)        # 6100 <__strcpy_chk@GLIBC_2.3.4>
     24bb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024c0 <PyEval_SaveThread@plt>:
-    24c0:	f3 0f 1e fa          	endbr64 
+    24c0:	f3 0f 1e fa          	endbr64
     24c4:	f2 ff 25 3d 3c 00 00 	bnd jmp *0x3c3d(%rip)        # 6108 <PyEval_SaveThread@Base>
     24cb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024d0 <PyModule_AddObject@plt>:
-    24d0:	f3 0f 1e fa          	endbr64 
+    24d0:	f3 0f 1e fa          	endbr64
     24d4:	f2 ff 25 35 3c 00 00 	bnd jmp *0x3c35(%rip)        # 6110 <PyModule_AddObject@Base>
     24db:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024e0 <dlsym@plt>:
-    24e0:	f3 0f 1e fa          	endbr64 
+    24e0:	f3 0f 1e fa          	endbr64
     24e4:	f2 ff 25 2d 3c 00 00 	bnd jmp *0x3c2d(%rip)        # 6118 <dlsym@GLIBC_2.34>
     24eb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 00000000000024f0 <PyLong_AsLongLong@plt>:
-    24f0:	f3 0f 1e fa          	endbr64 
+    24f0:	f3 0f 1e fa          	endbr64
     24f4:	f2 ff 25 25 3c 00 00 	bnd jmp *0x3c25(%rip)        # 6120 <PyLong_AsLongLong@Base>
     24fb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002500 <cuDeviceGetAttribute@plt>:
-    2500:	f3 0f 1e fa          	endbr64 
+    2500:	f3 0f 1e fa          	endbr64
     2504:	f2 ff 25 1d 3c 00 00 	bnd jmp *0x3c1d(%rip)        # 6128 <cuDeviceGetAttribute@Base>
     250b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002510 <cuCtxGetCurrent@plt>:
-    2510:	f3 0f 1e fa          	endbr64 
+    2510:	f3 0f 1e fa          	endbr64
     2514:	f2 ff 25 15 3c 00 00 	bnd jmp *0x3c15(%rip)        # 6130 <cuCtxGetCurrent@Base>
     251b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002520 <_Py_BuildValue_SizeT@plt>:
-    2520:	f3 0f 1e fa          	endbr64 
+    2520:	f3 0f 1e fa          	endbr64
     2524:	f2 ff 25 0d 3c 00 00 	bnd jmp *0x3c0d(%rip)        # 6138 <_Py_BuildValue_SizeT@Base>
     252b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002530 <posix_memalign@plt>:
-    2530:	f3 0f 1e fa          	endbr64 
+    2530:	f3 0f 1e fa          	endbr64
     2534:	f2 ff 25 05 3c 00 00 	bnd jmp *0x3c05(%rip)        # 6140 <posix_memalign@GLIBC_2.2.5>
     253b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002540 <cuFuncSetCacheConfig@plt>:
-    2540:	f3 0f 1e fa          	endbr64 
+    2540:	f3 0f 1e fa          	endbr64
     2544:	f2 ff 25 fd 3b 00 00 	bnd jmp *0x3bfd(%rip)        # 6148 <cuFuncSetCacheConfig@Base>
     254b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002550 <dlclose@plt>:
-    2550:	f3 0f 1e fa          	endbr64 
+    2550:	f3 0f 1e fa          	endbr64
     2554:	f2 ff 25 f5 3b 00 00 	bnd jmp *0x3bf5(%rip)        # 6150 <dlclose@GLIBC_2.34>
     255b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002560 <cuCtxGetLimit@plt>:
-    2560:	f3 0f 1e fa          	endbr64 
+    2560:	f3 0f 1e fa          	endbr64
     2564:	f2 ff 25 ed 3b 00 00 	bnd jmp *0x3bed(%rip)        # 6158 <cuCtxGetLimit@Base>
     256b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002570 <PySequence_Fast@plt>:
-    2570:	f3 0f 1e fa          	endbr64 
+    2570:	f3 0f 1e fa          	endbr64
     2574:	f2 ff 25 e5 3b 00 00 	bnd jmp *0x3be5(%rip)        # 6160 <PySequence_Fast@Base>
     257b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
@@ -420,7 +420,7 @@ Disassembly of section .text:
     259d:	74 09                	je     25a8 <deregister_tm_clones+0x28>
     259f:	ff e0                	jmp    *%rax
     25a1:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-    25a8:	c3                   	ret    
+    25a8:	c3                   	ret
     25a9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 00000000000025b0 <register_tm_clones>:
@@ -431,18 +431,18 @@ Disassembly of section .text:
     25c4:	48 c1 ee 3f          	shr    $0x3f,%rsi
     25c8:	48 c1 f8 03          	sar    $0x3,%rax
     25cc:	48 01 c6             	add    %rax,%rsi
-    25cf:	48 d1 fe             	sar    %rsi
+    25cf:	48 d1 fe             	sar    $1,%rsi
     25d2:	74 14                	je     25e8 <register_tm_clones+0x38>
     25d4:	48 8b 05 15 3a 00 00 	mov    0x3a15(%rip),%rax        # 5ff0 <_ITM_registerTMCloneTable@Base>
     25db:	48 85 c0             	test   %rax,%rax
     25de:	74 08                	je     25e8 <register_tm_clones+0x38>
     25e0:	ff e0                	jmp    *%rax
     25e2:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
-    25e8:	c3                   	ret    
+    25e8:	c3                   	ret
     25e9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 00000000000025f0 <__do_global_dtors_aux>:
-    25f0:	f3 0f 1e fa          	endbr64 
+    25f0:	f3 0f 1e fa          	endbr64
     25f4:	80 3d 7d 3e 00 00 00 	cmpb   $0x0,0x3e7d(%rip)        # 6478 <completed.0>
     25fb:	75 2b                	jne    2628 <__do_global_dtors_aux+0x38>
     25fd:	55                   	push   %rbp
@@ -455,29 +455,29 @@ Disassembly of section .text:
     2617:	e8 64 ff ff ff       	call   2580 <deregister_tm_clones>
     261c:	c6 05 55 3e 00 00 01 	movb   $0x1,0x3e55(%rip)        # 6478 <completed.0>
     2623:	5d                   	pop    %rbp
-    2624:	c3                   	ret    
+    2624:	c3                   	ret
     2625:	0f 1f 00             	nopl   (%rax)
-    2628:	c3                   	ret    
+    2628:	c3                   	ret
     2629:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 0000000000002630 <frame_dummy>:
-    2630:	f3 0f 1e fa          	endbr64 
+    2630:	f3 0f 1e fa          	endbr64
     2634:	e9 77 ff ff ff       	jmp    25b0 <register_tm_clones>
     2639:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 0000000000002640 <PyCUtensorMap_dealloc>:
-    2640:	f3 0f 1e fa          	endbr64 
+    2640:	f3 0f 1e fa          	endbr64
     2644:	48 8b 47 08          	mov    0x8(%rdi),%rax
     2648:	ff a0 40 01 00 00    	jmp    *0x140(%rax)
     264e:	66 90                	xchg   %ax,%ax
 
 0000000000002650 <PyCUtensorMap_free>:
-    2650:	f3 0f 1e fa          	endbr64 
+    2650:	f3 0f 1e fa          	endbr64
     2654:	e9 d7 fc ff ff       	jmp    2330 <free@plt>
     2659:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 0000000000002660 <PyCUtensorMap_alloc>:
-    2660:	f3 0f 1e fa          	endbr64 
+    2660:	f3 0f 1e fa          	endbr64
     2664:	41 54                	push   %r12
     2666:	be 80 00 00 00       	mov    $0x80,%esi
     266b:	55                   	push   %rbp
@@ -503,7 +503,7 @@ Disassembly of section .text:
     26b4:	4c 89 e0             	mov    %r12,%rax
     26b7:	5d                   	pop    %rbp
     26b8:	41 5c                	pop    %r12
-    26ba:	c3                   	ret    
+    26ba:	c3                   	ret
     26bb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
     26c0:	4c 8b 24 24          	mov    (%rsp),%r12
     26c4:	48 89 ee             	mov    %rbp,%rsi
@@ -570,14 +570,14 @@ Disassembly of section .text:
     27b8:	31 c0                	xor    %eax,%eax
     27ba:	5d                   	pop    %rbp
     27bb:	41 5c                	pop    %r12
-    27bd:	c3                   	ret    
+    27bd:	c3                   	ret
     27be:	e8 ed fb ff ff       	call   23b0 <__stack_chk_fail@plt>
     27c3:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
     27ca:	00 00 00 00 
     27ce:	66 90                	xchg   %ax,%ax
 
 00000000000027d0 <setPrintfFifoSize>:
-    27d0:	f3 0f 1e fa          	endbr64 
+    27d0:	f3 0f 1e fa          	endbr64
     27d4:	41 54                	push   %r12
     27d6:	48 89 f7             	mov    %rsi,%rdi
     27d9:	48 8d 35 27 1b 00 00 	lea    0x1b27(%rip),%rsi        # 4307 <_fini+0x927>
@@ -635,7 +635,7 @@ Disassembly of section .text:
     28ad:	48 83 c4 28          	add    $0x28,%rsp
     28b1:	5d                   	pop    %rbp
     28b2:	41 5c                	pop    %r12
-    28b4:	c3                   	ret    
+    28b4:	c3                   	ret
     28b5:	0f 1f 00             	nopl   (%rax)
     28b8:	e8 53 fe ff ff       	call   2710 <gpuAssert.part.0>
     28bd:	84 c0                	test   %al,%al
@@ -686,7 +686,7 @@ Disassembly of section .text:
     296d:	0f 1f 00             	nopl   (%rax)
 
 0000000000002970 <getDeviceProperties>:
-    2970:	f3 0f 1e fa          	endbr64 
+    2970:	f3 0f 1e fa          	endbr64
     2974:	48 83 ec 38          	sub    $0x38,%rsp
     2978:	48 89 f7             	mov    %rsi,%rdi
     297b:	48 8d 35 40 1a 00 00 	lea    0x1a40(%rip),%rsi        # 43c2 <_fini+0x9e2>
@@ -800,7 +800,7 @@ Disassembly of section .text:
     2b2e:	00 00 
     2b30:	75 3d                	jne    2b6f <getDeviceProperties+0x1ff>
     2b32:	48 83 c4 38          	add    $0x38,%rsp
-    2b36:	c3                   	ret    
+    2b36:	c3                   	ret
     2b37:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
     2b3e:	00 00 
     2b40:	e8 cb fb ff ff       	call   2710 <gpuAssert.part.0>
@@ -823,7 +823,7 @@ Disassembly of section .text:
     2b7f:	90                   	nop
 
 0000000000002b80 <loadBinary>:
-    2b80:	f3 0f 1e fa          	endbr64 
+    2b80:	f3 0f 1e fa          	endbr64
     2b84:	41 54                	push   %r12
     2b86:	48 89 f7             	mov    %rsi,%rdi
     2b89:	48 8d 35 de 17 00 00 	lea    0x17de(%rip),%rsi        # 436e <_fini+0x98e>
@@ -945,7 +945,7 @@ Disassembly of section .text:
     2d5e:	48 83 c4 68          	add    $0x68,%rsp
     2d62:	5d                   	pop    %rbp
     2d63:	41 5c                	pop    %r12
-    2d65:	c3                   	ret    
+    2d65:	c3                   	ret
     2d66:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
     2d6d:	00 00 00 
     2d70:	e8 9b f9 ff ff       	call   2710 <gpuAssert.part.0>
@@ -1045,7 +1045,7 @@ Disassembly of section .text:
     2ecb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000002ed0 <occupancyMaxActiveClusters>:
-    2ed0:	f3 0f 1e fa          	endbr64 
+    2ed0:	f3 0f 1e fa          	endbr64
     2ed4:	41 55                	push   %r13
     2ed6:	48 89 f7             	mov    %rsi,%rdi
     2ed9:	48 8d 35 9c 14 00 00 	lea    0x149c(%rip),%rsi        # 437c <_fini+0x99c>
@@ -1182,7 +1182,7 @@ Disassembly of section .text:
     30ff:	5d                   	pop    %rbp
     3100:	41 5c                	pop    %r12
     3102:	41 5d                	pop    %r13
-    3104:	c3                   	ret    
+    3104:	c3                   	ret
     3105:	0f 1f 00             	nopl   (%rax)
     3108:	48 8d 74 24 30       	lea    0x30(%rsp),%rsi
     310d:	4c 8d ac 24 c0 00 00 	lea    0xc0(%rsp),%r13
@@ -1251,7 +1251,7 @@ Disassembly of section .text:
     322d:	00 00 00 
 
 0000000000003230 <fillTMADescriptor>:
-    3230:	f3 0f 1e fa          	endbr64 
+    3230:	f3 0f 1e fa          	endbr64
     3234:	41 57                	push   %r15
     3236:	48 89 f7             	mov    %rsi,%rdi
     3239:	48 8d 35 7b 11 00 00 	lea    0x117b(%rip),%rsi        # 43bb <_fini+0x9db>
@@ -1355,7 +1355,7 @@ Disassembly of section .text:
     33d0:	41 5d                	pop    %r13
     33d2:	41 5e                	pop    %r14
     33d4:	41 5f                	pop    %r15
-    33d6:	c3                   	ret    
+    33d6:	c3                   	ret
     33d7:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
     33de:	00 00 
     33e0:	48 8b 7c 24 48       	mov    0x48(%rsp),%rdi
@@ -1519,7 +1519,7 @@ Disassembly of section .text:
     36a9:	e8 12 ed ff ff       	call   23c0 <PyErr_SetString@plt>
     36ae:	e9 62 fe ff ff       	jmp    3515 <fillTMADescriptor+0x2e5>
     36b3:	41 8d 46 ff          	lea    -0x1(%r14),%eax
-    36b7:	48 98                	cltq   
+    36b7:	48 98                	cltq
     36b9:	48 8b 8c c4 a0 00 00 	mov    0xa0(%rsp,%rax,8),%rcx
     36c0:	00 
     36c1:	48 63 54 24 1c       	movslq 0x1c(%rsp),%rdx
@@ -1603,7 +1603,7 @@ Disassembly of section .text:
     37ff:	e8 5c eb ff ff       	call   2360 <PyGILState_Release@plt>
     3804:	e9 94 fb ff ff       	jmp    339d <fillTMADescriptor+0x16d>
     3809:	41 8d 46 ff          	lea    -0x1(%r14),%eax
-    380d:	48 98                	cltq   
+    380d:	48 98                	cltq
     380f:	48 8b 8c c4 a0 00 00 	mov    0xa0(%rsp,%rax,8),%rcx
     3816:	00 
     3817:	0f 85 22 01 00 00    	jne    393f <fillTMADescriptor+0x70f>
@@ -1676,7 +1676,7 @@ Disassembly of section .text:
     396b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
 
 0000000000003970 <PyInit_cuda_utils>:
-    3970:	f3 0f 1e fa          	endbr64 
+    3970:	f3 0f 1e fa          	endbr64
     3974:	41 55                	push   %r13
     3976:	4c 8d 2d 63 29 00 00 	lea    0x2963(%rip),%r13        # 62e0 <PyCUtensorMapType>
     397d:	41 54                	push   %r12
@@ -1705,12 +1705,12 @@ Disassembly of section .text:
     39d8:	4c 89 e0             	mov    %r12,%rax
     39db:	41 5c                	pop    %r12
     39dd:	41 5d                	pop    %r13
-    39df:	c3                   	ret    
+    39df:	c3                   	ret
 
 Disassembly of section .fini:
 
 00000000000039e0 <_fini>:
-    39e0:	f3 0f 1e fa          	endbr64 
+    39e0:	f3 0f 1e fa          	endbr64
     39e4:	48 83 ec 08          	sub    $0x8,%rsp
     39e8:	48 83 c4 08          	add    $0x8,%rsp
-    39ec:	c3                   	ret    
+    39ec:	c3                   	ret

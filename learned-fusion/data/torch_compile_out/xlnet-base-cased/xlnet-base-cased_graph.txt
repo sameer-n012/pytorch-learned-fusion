@@ -1,0 +1,695 @@
+graph():
+    %p_mask_emb : [num_users=0] = placeholder[target=p_mask_emb]
+    %p_word_embedding_weight : [num_users=1] = placeholder[target=p_word_embedding_weight]
+    %p_layer_0_rel_attn_q : [num_users=1] = placeholder[target=p_layer_0_rel_attn_q]
+    %p_layer_0_rel_attn_k : [num_users=1] = placeholder[target=p_layer_0_rel_attn_k]
+    %p_layer_0_rel_attn_v : [num_users=1] = placeholder[target=p_layer_0_rel_attn_v]
+    %p_layer_0_rel_attn_o : [num_users=1] = placeholder[target=p_layer_0_rel_attn_o]
+    %p_layer_0_rel_attn_r : [num_users=1] = placeholder[target=p_layer_0_rel_attn_r]
+    %p_layer_0_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_0_rel_attn_r_r_bias]
+    %p_layer_0_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_0_rel_attn_r_s_bias]
+    %p_layer_0_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_0_rel_attn_r_w_bias]
+    %p_layer_0_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_0_rel_attn_seg_embed]
+    %p_layer_0_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_0_rel_attn_layer_norm_weight]
+    %p_layer_0_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_0_rel_attn_layer_norm_bias]
+    %p_layer_0_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_0_ff_layer_norm_weight]
+    %p_layer_0_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_0_ff_layer_norm_bias]
+    %p_layer_0_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_0_ff_layer_1_weight]
+    %p_layer_0_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_0_ff_layer_1_bias]
+    %p_layer_0_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_0_ff_layer_2_weight]
+    %p_layer_0_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_0_ff_layer_2_bias]
+    %p_layer_1_rel_attn_q : [num_users=1] = placeholder[target=p_layer_1_rel_attn_q]
+    %p_layer_1_rel_attn_k : [num_users=1] = placeholder[target=p_layer_1_rel_attn_k]
+    %p_layer_1_rel_attn_v : [num_users=1] = placeholder[target=p_layer_1_rel_attn_v]
+    %p_layer_1_rel_attn_o : [num_users=1] = placeholder[target=p_layer_1_rel_attn_o]
+    %p_layer_1_rel_attn_r : [num_users=1] = placeholder[target=p_layer_1_rel_attn_r]
+    %p_layer_1_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_1_rel_attn_r_r_bias]
+    %p_layer_1_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_1_rel_attn_r_s_bias]
+    %p_layer_1_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_1_rel_attn_r_w_bias]
+    %p_layer_1_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_1_rel_attn_seg_embed]
+    %p_layer_1_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_1_rel_attn_layer_norm_weight]
+    %p_layer_1_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_1_rel_attn_layer_norm_bias]
+    %p_layer_1_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_1_ff_layer_norm_weight]
+    %p_layer_1_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_1_ff_layer_norm_bias]
+    %p_layer_1_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_1_ff_layer_1_weight]
+    %p_layer_1_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_1_ff_layer_1_bias]
+    %p_layer_1_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_1_ff_layer_2_weight]
+    %p_layer_1_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_1_ff_layer_2_bias]
+    %p_layer_2_rel_attn_q : [num_users=1] = placeholder[target=p_layer_2_rel_attn_q]
+    %p_layer_2_rel_attn_k : [num_users=1] = placeholder[target=p_layer_2_rel_attn_k]
+    %p_layer_2_rel_attn_v : [num_users=1] = placeholder[target=p_layer_2_rel_attn_v]
+    %p_layer_2_rel_attn_o : [num_users=1] = placeholder[target=p_layer_2_rel_attn_o]
+    %p_layer_2_rel_attn_r : [num_users=1] = placeholder[target=p_layer_2_rel_attn_r]
+    %p_layer_2_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_2_rel_attn_r_r_bias]
+    %p_layer_2_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_2_rel_attn_r_s_bias]
+    %p_layer_2_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_2_rel_attn_r_w_bias]
+    %p_layer_2_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_2_rel_attn_seg_embed]
+    %p_layer_2_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_2_rel_attn_layer_norm_weight]
+    %p_layer_2_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_2_rel_attn_layer_norm_bias]
+    %p_layer_2_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_2_ff_layer_norm_weight]
+    %p_layer_2_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_2_ff_layer_norm_bias]
+    %p_layer_2_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_2_ff_layer_1_weight]
+    %p_layer_2_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_2_ff_layer_1_bias]
+    %p_layer_2_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_2_ff_layer_2_weight]
+    %p_layer_2_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_2_ff_layer_2_bias]
+    %p_layer_3_rel_attn_q : [num_users=1] = placeholder[target=p_layer_3_rel_attn_q]
+    %p_layer_3_rel_attn_k : [num_users=1] = placeholder[target=p_layer_3_rel_attn_k]
+    %p_layer_3_rel_attn_v : [num_users=1] = placeholder[target=p_layer_3_rel_attn_v]
+    %p_layer_3_rel_attn_o : [num_users=1] = placeholder[target=p_layer_3_rel_attn_o]
+    %p_layer_3_rel_attn_r : [num_users=1] = placeholder[target=p_layer_3_rel_attn_r]
+    %p_layer_3_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_3_rel_attn_r_r_bias]
+    %p_layer_3_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_3_rel_attn_r_s_bias]
+    %p_layer_3_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_3_rel_attn_r_w_bias]
+    %p_layer_3_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_3_rel_attn_seg_embed]
+    %p_layer_3_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_3_rel_attn_layer_norm_weight]
+    %p_layer_3_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_3_rel_attn_layer_norm_bias]
+    %p_layer_3_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_3_ff_layer_norm_weight]
+    %p_layer_3_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_3_ff_layer_norm_bias]
+    %p_layer_3_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_3_ff_layer_1_weight]
+    %p_layer_3_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_3_ff_layer_1_bias]
+    %p_layer_3_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_3_ff_layer_2_weight]
+    %p_layer_3_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_3_ff_layer_2_bias]
+    %p_layer_4_rel_attn_q : [num_users=1] = placeholder[target=p_layer_4_rel_attn_q]
+    %p_layer_4_rel_attn_k : [num_users=1] = placeholder[target=p_layer_4_rel_attn_k]
+    %p_layer_4_rel_attn_v : [num_users=1] = placeholder[target=p_layer_4_rel_attn_v]
+    %p_layer_4_rel_attn_o : [num_users=1] = placeholder[target=p_layer_4_rel_attn_o]
+    %p_layer_4_rel_attn_r : [num_users=1] = placeholder[target=p_layer_4_rel_attn_r]
+    %p_layer_4_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_4_rel_attn_r_r_bias]
+    %p_layer_4_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_4_rel_attn_r_s_bias]
+    %p_layer_4_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_4_rel_attn_r_w_bias]
+    %p_layer_4_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_4_rel_attn_seg_embed]
+    %p_layer_4_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_4_rel_attn_layer_norm_weight]
+    %p_layer_4_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_4_rel_attn_layer_norm_bias]
+    %p_layer_4_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_4_ff_layer_norm_weight]
+    %p_layer_4_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_4_ff_layer_norm_bias]
+    %p_layer_4_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_4_ff_layer_1_weight]
+    %p_layer_4_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_4_ff_layer_1_bias]
+    %p_layer_4_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_4_ff_layer_2_weight]
+    %p_layer_4_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_4_ff_layer_2_bias]
+    %p_layer_5_rel_attn_q : [num_users=1] = placeholder[target=p_layer_5_rel_attn_q]
+    %p_layer_5_rel_attn_k : [num_users=1] = placeholder[target=p_layer_5_rel_attn_k]
+    %p_layer_5_rel_attn_v : [num_users=1] = placeholder[target=p_layer_5_rel_attn_v]
+    %p_layer_5_rel_attn_o : [num_users=1] = placeholder[target=p_layer_5_rel_attn_o]
+    %p_layer_5_rel_attn_r : [num_users=1] = placeholder[target=p_layer_5_rel_attn_r]
+    %p_layer_5_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_5_rel_attn_r_r_bias]
+    %p_layer_5_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_5_rel_attn_r_s_bias]
+    %p_layer_5_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_5_rel_attn_r_w_bias]
+    %p_layer_5_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_5_rel_attn_seg_embed]
+    %p_layer_5_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_5_rel_attn_layer_norm_weight]
+    %p_layer_5_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_5_rel_attn_layer_norm_bias]
+    %p_layer_5_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_5_ff_layer_norm_weight]
+    %p_layer_5_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_5_ff_layer_norm_bias]
+    %p_layer_5_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_5_ff_layer_1_weight]
+    %p_layer_5_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_5_ff_layer_1_bias]
+    %p_layer_5_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_5_ff_layer_2_weight]
+    %p_layer_5_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_5_ff_layer_2_bias]
+    %p_layer_6_rel_attn_q : [num_users=1] = placeholder[target=p_layer_6_rel_attn_q]
+    %p_layer_6_rel_attn_k : [num_users=1] = placeholder[target=p_layer_6_rel_attn_k]
+    %p_layer_6_rel_attn_v : [num_users=1] = placeholder[target=p_layer_6_rel_attn_v]
+    %p_layer_6_rel_attn_o : [num_users=1] = placeholder[target=p_layer_6_rel_attn_o]
+    %p_layer_6_rel_attn_r : [num_users=1] = placeholder[target=p_layer_6_rel_attn_r]
+    %p_layer_6_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_6_rel_attn_r_r_bias]
+    %p_layer_6_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_6_rel_attn_r_s_bias]
+    %p_layer_6_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_6_rel_attn_r_w_bias]
+    %p_layer_6_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_6_rel_attn_seg_embed]
+    %p_layer_6_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_6_rel_attn_layer_norm_weight]
+    %p_layer_6_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_6_rel_attn_layer_norm_bias]
+    %p_layer_6_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_6_ff_layer_norm_weight]
+    %p_layer_6_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_6_ff_layer_norm_bias]
+    %p_layer_6_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_6_ff_layer_1_weight]
+    %p_layer_6_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_6_ff_layer_1_bias]
+    %p_layer_6_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_6_ff_layer_2_weight]
+    %p_layer_6_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_6_ff_layer_2_bias]
+    %p_layer_7_rel_attn_q : [num_users=1] = placeholder[target=p_layer_7_rel_attn_q]
+    %p_layer_7_rel_attn_k : [num_users=1] = placeholder[target=p_layer_7_rel_attn_k]
+    %p_layer_7_rel_attn_v : [num_users=1] = placeholder[target=p_layer_7_rel_attn_v]
+    %p_layer_7_rel_attn_o : [num_users=1] = placeholder[target=p_layer_7_rel_attn_o]
+    %p_layer_7_rel_attn_r : [num_users=1] = placeholder[target=p_layer_7_rel_attn_r]
+    %p_layer_7_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_7_rel_attn_r_r_bias]
+    %p_layer_7_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_7_rel_attn_r_s_bias]
+    %p_layer_7_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_7_rel_attn_r_w_bias]
+    %p_layer_7_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_7_rel_attn_seg_embed]
+    %p_layer_7_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_7_rel_attn_layer_norm_weight]
+    %p_layer_7_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_7_rel_attn_layer_norm_bias]
+    %p_layer_7_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_7_ff_layer_norm_weight]
+    %p_layer_7_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_7_ff_layer_norm_bias]
+    %p_layer_7_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_7_ff_layer_1_weight]
+    %p_layer_7_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_7_ff_layer_1_bias]
+    %p_layer_7_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_7_ff_layer_2_weight]
+    %p_layer_7_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_7_ff_layer_2_bias]
+    %p_layer_8_rel_attn_q : [num_users=1] = placeholder[target=p_layer_8_rel_attn_q]
+    %p_layer_8_rel_attn_k : [num_users=1] = placeholder[target=p_layer_8_rel_attn_k]
+    %p_layer_8_rel_attn_v : [num_users=1] = placeholder[target=p_layer_8_rel_attn_v]
+    %p_layer_8_rel_attn_o : [num_users=1] = placeholder[target=p_layer_8_rel_attn_o]
+    %p_layer_8_rel_attn_r : [num_users=1] = placeholder[target=p_layer_8_rel_attn_r]
+    %p_layer_8_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_8_rel_attn_r_r_bias]
+    %p_layer_8_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_8_rel_attn_r_s_bias]
+    %p_layer_8_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_8_rel_attn_r_w_bias]
+    %p_layer_8_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_8_rel_attn_seg_embed]
+    %p_layer_8_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_8_rel_attn_layer_norm_weight]
+    %p_layer_8_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_8_rel_attn_layer_norm_bias]
+    %p_layer_8_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_8_ff_layer_norm_weight]
+    %p_layer_8_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_8_ff_layer_norm_bias]
+    %p_layer_8_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_8_ff_layer_1_weight]
+    %p_layer_8_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_8_ff_layer_1_bias]
+    %p_layer_8_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_8_ff_layer_2_weight]
+    %p_layer_8_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_8_ff_layer_2_bias]
+    %p_layer_9_rel_attn_q : [num_users=1] = placeholder[target=p_layer_9_rel_attn_q]
+    %p_layer_9_rel_attn_k : [num_users=1] = placeholder[target=p_layer_9_rel_attn_k]
+    %p_layer_9_rel_attn_v : [num_users=1] = placeholder[target=p_layer_9_rel_attn_v]
+    %p_layer_9_rel_attn_o : [num_users=1] = placeholder[target=p_layer_9_rel_attn_o]
+    %p_layer_9_rel_attn_r : [num_users=1] = placeholder[target=p_layer_9_rel_attn_r]
+    %p_layer_9_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_9_rel_attn_r_r_bias]
+    %p_layer_9_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_9_rel_attn_r_s_bias]
+    %p_layer_9_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_9_rel_attn_r_w_bias]
+    %p_layer_9_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_9_rel_attn_seg_embed]
+    %p_layer_9_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_9_rel_attn_layer_norm_weight]
+    %p_layer_9_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_9_rel_attn_layer_norm_bias]
+    %p_layer_9_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_9_ff_layer_norm_weight]
+    %p_layer_9_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_9_ff_layer_norm_bias]
+    %p_layer_9_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_9_ff_layer_1_weight]
+    %p_layer_9_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_9_ff_layer_1_bias]
+    %p_layer_9_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_9_ff_layer_2_weight]
+    %p_layer_9_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_9_ff_layer_2_bias]
+    %p_layer_10_rel_attn_q : [num_users=1] = placeholder[target=p_layer_10_rel_attn_q]
+    %p_layer_10_rel_attn_k : [num_users=1] = placeholder[target=p_layer_10_rel_attn_k]
+    %p_layer_10_rel_attn_v : [num_users=1] = placeholder[target=p_layer_10_rel_attn_v]
+    %p_layer_10_rel_attn_o : [num_users=1] = placeholder[target=p_layer_10_rel_attn_o]
+    %p_layer_10_rel_attn_r : [num_users=1] = placeholder[target=p_layer_10_rel_attn_r]
+    %p_layer_10_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_10_rel_attn_r_r_bias]
+    %p_layer_10_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_10_rel_attn_r_s_bias]
+    %p_layer_10_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_10_rel_attn_r_w_bias]
+    %p_layer_10_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_10_rel_attn_seg_embed]
+    %p_layer_10_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_10_rel_attn_layer_norm_weight]
+    %p_layer_10_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_10_rel_attn_layer_norm_bias]
+    %p_layer_10_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_10_ff_layer_norm_weight]
+    %p_layer_10_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_10_ff_layer_norm_bias]
+    %p_layer_10_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_10_ff_layer_1_weight]
+    %p_layer_10_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_10_ff_layer_1_bias]
+    %p_layer_10_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_10_ff_layer_2_weight]
+    %p_layer_10_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_10_ff_layer_2_bias]
+    %p_layer_11_rel_attn_q : [num_users=1] = placeholder[target=p_layer_11_rel_attn_q]
+    %p_layer_11_rel_attn_k : [num_users=1] = placeholder[target=p_layer_11_rel_attn_k]
+    %p_layer_11_rel_attn_v : [num_users=1] = placeholder[target=p_layer_11_rel_attn_v]
+    %p_layer_11_rel_attn_o : [num_users=1] = placeholder[target=p_layer_11_rel_attn_o]
+    %p_layer_11_rel_attn_r : [num_users=1] = placeholder[target=p_layer_11_rel_attn_r]
+    %p_layer_11_rel_attn_r_r_bias : [num_users=1] = placeholder[target=p_layer_11_rel_attn_r_r_bias]
+    %p_layer_11_rel_attn_r_s_bias : [num_users=0] = placeholder[target=p_layer_11_rel_attn_r_s_bias]
+    %p_layer_11_rel_attn_r_w_bias : [num_users=1] = placeholder[target=p_layer_11_rel_attn_r_w_bias]
+    %p_layer_11_rel_attn_seg_embed : [num_users=0] = placeholder[target=p_layer_11_rel_attn_seg_embed]
+    %p_layer_11_rel_attn_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_11_rel_attn_layer_norm_weight]
+    %p_layer_11_rel_attn_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_11_rel_attn_layer_norm_bias]
+    %p_layer_11_ff_layer_norm_weight : [num_users=1] = placeholder[target=p_layer_11_ff_layer_norm_weight]
+    %p_layer_11_ff_layer_norm_bias : [num_users=1] = placeholder[target=p_layer_11_ff_layer_norm_bias]
+    %p_layer_11_ff_layer_1_weight : [num_users=1] = placeholder[target=p_layer_11_ff_layer_1_weight]
+    %p_layer_11_ff_layer_1_bias : [num_users=1] = placeholder[target=p_layer_11_ff_layer_1_bias]
+    %p_layer_11_ff_layer_2_weight : [num_users=1] = placeholder[target=p_layer_11_ff_layer_2_weight]
+    %p_layer_11_ff_layer_2_bias : [num_users=1] = placeholder[target=p_layer_11_ff_layer_2_bias]
+    %input_ids : [num_users=1] = placeholder[target=input_ids]
+    %attention_mask : [num_users=1] = placeholder[target=attention_mask]
+    %transpose : [num_users=1] = call_function[target=torch.ops.aten.transpose.int](args = (%input_ids, 0, 1), kwargs = {})
+    %transpose_1 : [num_users=1] = call_function[target=torch.ops.aten.transpose.int](args = (%attention_mask, 0, 1), kwargs = {})
+    %rsub : [num_users=1] = call_function[target=torch.ops.aten.rsub.Scalar](args = (%transpose_1, 1.0), kwargs = {})
+    %unsqueeze : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%rsub, 0), kwargs = {})
+    %unsqueeze_1 : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%unsqueeze, 3), kwargs = {})
+    %gt : [num_users=2] = call_function[target=torch.ops.aten.gt.Scalar](args = (%unsqueeze_1, 0), kwargs = {})
+    %_assert_tensor_metadata_default : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%gt,), kwargs = {dtype: torch.bool, device: cuda:0, layout: torch.strided})
+    %to : [num_users=1] = call_function[target=torch.ops.aten.to.dtype](args = (%gt, torch.float32), kwargs = {})
+    %eye : [num_users=2] = call_function[target=torch.ops.aten.eye.default](args = (8,), kwargs = {device: cpu, pin_memory: False})
+    %_assert_tensor_metadata_default_1 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%eye,), kwargs = {dtype: torch.float32, device: cpu, layout: torch.strided})
+    %to_1 : [num_users=1] = call_function[target=torch.ops.aten.to.device](args = (%eye, cuda:0, torch.float32), kwargs = {})
+    %neg : [num_users=1] = call_function[target=torch.ops.aten.neg.default](args = (%to_1,), kwargs = {})
+    %unsqueeze_2 : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%neg, 2), kwargs = {})
+    %unsqueeze_3 : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%unsqueeze_2, 3), kwargs = {})
+    %add : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%to, %unsqueeze_3), kwargs = {})
+    %gt_1 : [num_users=2] = call_function[target=torch.ops.aten.gt.Scalar](args = (%add, 0), kwargs = {})
+    %_assert_tensor_metadata_default_2 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%gt_1,), kwargs = {dtype: torch.bool, device: cuda:0, layout: torch.strided})
+    %to_2 : [num_users=12] = call_function[target=torch.ops.aten.to.device](args = (%gt_1, cuda:0, torch.float32), kwargs = {})
+    %embedding : [num_users=1] = call_function[target=torch.ops.aten.embedding.default](args = (%p_word_embedding_weight, %transpose), kwargs = {})
+    %dropout : [num_users=5] = call_function[target=torch.ops.aten.dropout.default](args = (%embedding, 0.1, False), kwargs = {})
+    %arange : [num_users=2] = call_function[target=torch.ops.aten.arange.start_step](args = (0, 768, 2.0), kwargs = {dtype: torch.int64, device: cpu, pin_memory: False})
+    %_assert_tensor_metadata_default_3 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%arange,), kwargs = {dtype: torch.int64, device: cpu, layout: torch.strided})
+    %to_3 : [num_users=1] = call_function[target=torch.ops.aten.to.dtype](args = (%arange, torch.float32), kwargs = {})
+    %div : [num_users=1] = call_function[target=torch.ops.aten.div.Tensor](args = (%to_3, 768), kwargs = {})
+    %pow_1 : [num_users=1] = call_function[target=torch.ops.aten.pow.Scalar](args = (10000, %div), kwargs = {})
+    %reciprocal : [num_users=1] = call_function[target=torch.ops.aten.reciprocal.default](args = (%pow_1,), kwargs = {})
+    %mul : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%reciprocal, 1), kwargs = {})
+    %arange_1 : [num_users=2] = call_function[target=torch.ops.aten.arange.start_step](args = (8, -8, -1.0), kwargs = {dtype: torch.int64, device: cpu, pin_memory: False})
+    %_assert_tensor_metadata_default_4 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%arange_1,), kwargs = {dtype: torch.int64, device: cpu, layout: torch.strided})
+    %to_4 : [num_users=1] = call_function[target=torch.ops.aten.to.dtype](args = (%arange_1, torch.float32), kwargs = {})
+    %einsum : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (i,d->id, [%to_4, %mul]), kwargs = {})
+    %sin : [num_users=1] = call_function[target=torch.ops.aten.sin.default](args = (%einsum,), kwargs = {})
+    %cos : [num_users=1] = call_function[target=torch.ops.aten.cos.default](args = (%einsum,), kwargs = {})
+    %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sin, %cos], -1), kwargs = {})
+    %unsqueeze_4 : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%cat, 1), kwargs = {})
+    %expand : [num_users=2] = call_function[target=torch.ops.aten.expand.default](args = (%unsqueeze_4, [-1, 1, -1]), kwargs = {})
+    %_assert_tensor_metadata_default_5 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%expand,), kwargs = {dtype: torch.float32, device: cpu, layout: torch.strided})
+    %to_5 : [num_users=1] = call_function[target=torch.ops.aten.to.dtype_layout](args = (%expand,), kwargs = {dtype: torch.float32, layout: torch.strided, device: cuda:0})
+    %dropout_1 : [num_users=2] = call_function[target=torch.ops.aten.dropout.default](args = (%to_5, 0.1, False), kwargs = {})
+    %slice_1 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%dropout, 0, 0, 9223372036854775807), kwargs = {})
+    %detach : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_1,), kwargs = {})
+    %einsum_1 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%dropout, %p_layer_0_rel_attn_q]), kwargs = {})
+    %einsum_2 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%dropout, %p_layer_0_rel_attn_k]), kwargs = {})
+    %einsum_3 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%dropout, %p_layer_0_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_6 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%dropout_1,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_6 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%dropout_1, torch.float32), kwargs = {})
+    %einsum_4 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_6, %p_layer_0_rel_attn_r]), kwargs = {})
+    %add_1 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_1, %p_layer_0_rel_attn_r_w_bias), kwargs = {})
+    %einsum_5 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_1, %einsum_2]), kwargs = {})
+    %add_2 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_1, %p_layer_0_rel_attn_r_r_bias), kwargs = {})
+    %einsum_6 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_2, %einsum_4]), kwargs = {})
+    %reshape : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_6, [1, 12, 16, 8]), kwargs = {})
+    %slice_2 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_2, [1, 12, 8, 15]), kwargs = {})
+    %arange_2 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_1, 3, %arange_2), kwargs = {})
+    %add_3 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_5, %index_select), kwargs = {})
+    %add_4 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_3, 0), kwargs = {})
+    %mul_1 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_4, 0.125), kwargs = {})
+    %einsum_7 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_2 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_7, 1e+30), kwargs = {})
+    %sub : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_1, %mul_2), kwargs = {})
+    %softmax : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub, 3), kwargs = {})
+    %dropout_2 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax, 0.1, False), kwargs = {})
+    %einsum_8 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_2, %einsum_3]), kwargs = {})
+    %einsum_9 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_8, %p_layer_0_rel_attn_o]), kwargs = {})
+    %dropout_3 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_9, 0.1, False), kwargs = {})
+    %add_5 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_3, %dropout), kwargs = {})
+    %layer_norm : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_5, [768], %p_layer_0_rel_attn_layer_norm_weight, %p_layer_0_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm, %p_layer_0_ff_layer_1_weight, %p_layer_0_ff_layer_1_bias), kwargs = {})
+    %gelu : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear,), kwargs = {})
+    %dropout_4 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu, 0.1, False), kwargs = {})
+    %linear_1 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_4, %p_layer_0_ff_layer_2_weight, %p_layer_0_ff_layer_2_bias), kwargs = {})
+    %dropout_5 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_1, 0.1, False), kwargs = {})
+    %add_6 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_5, %layer_norm), kwargs = {})
+    %layer_norm_1 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_6, [768], %p_layer_0_ff_layer_norm_weight, %p_layer_0_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_3 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_1, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_1 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_3,), kwargs = {})
+    %einsum_10 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_1, %p_layer_1_rel_attn_q]), kwargs = {})
+    %einsum_11 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_1, %p_layer_1_rel_attn_k]), kwargs = {})
+    %einsum_12 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_1, %p_layer_1_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_7 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_6,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_7 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_6, torch.float32), kwargs = {})
+    %einsum_13 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_7, %p_layer_1_rel_attn_r]), kwargs = {})
+    %add_7 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_10, %p_layer_1_rel_attn_r_w_bias), kwargs = {})
+    %einsum_14 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_7, %einsum_11]), kwargs = {})
+    %add_8 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_10, %p_layer_1_rel_attn_r_r_bias), kwargs = {})
+    %einsum_15 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_8, %einsum_13]), kwargs = {})
+    %reshape_2 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_15, [1, 12, 16, 8]), kwargs = {})
+    %slice_4 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_2, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_3 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_4, [1, 12, 8, 15]), kwargs = {})
+    %arange_3 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_1 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_3, 3, %arange_3), kwargs = {})
+    %add_9 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_14, %index_select_1), kwargs = {})
+    %add_10 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_9, 0), kwargs = {})
+    %mul_3 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_10, 0.125), kwargs = {})
+    %einsum_16 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_4 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_16, 1e+30), kwargs = {})
+    %sub_1 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_3, %mul_4), kwargs = {})
+    %softmax_1 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_1, 3), kwargs = {})
+    %dropout_6 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_1, 0.1, False), kwargs = {})
+    %einsum_17 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_6, %einsum_12]), kwargs = {})
+    %einsum_18 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_17, %p_layer_1_rel_attn_o]), kwargs = {})
+    %dropout_7 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_18, 0.1, False), kwargs = {})
+    %add_11 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_7, %layer_norm_1), kwargs = {})
+    %layer_norm_2 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_11, [768], %p_layer_1_rel_attn_layer_norm_weight, %p_layer_1_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_2 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_2, %p_layer_1_ff_layer_1_weight, %p_layer_1_ff_layer_1_bias), kwargs = {})
+    %gelu_1 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_2,), kwargs = {})
+    %dropout_8 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_1, 0.1, False), kwargs = {})
+    %linear_3 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_8, %p_layer_1_ff_layer_2_weight, %p_layer_1_ff_layer_2_bias), kwargs = {})
+    %dropout_9 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_3, 0.1, False), kwargs = {})
+    %add_12 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_9, %layer_norm_2), kwargs = {})
+    %layer_norm_3 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_12, [768], %p_layer_1_ff_layer_norm_weight, %p_layer_1_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_5 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_3, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_2 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_5,), kwargs = {})
+    %einsum_19 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_3, %p_layer_2_rel_attn_q]), kwargs = {})
+    %einsum_20 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_3, %p_layer_2_rel_attn_k]), kwargs = {})
+    %einsum_21 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_3, %p_layer_2_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_8 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_7,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_8 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_7, torch.float32), kwargs = {})
+    %einsum_22 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_8, %p_layer_2_rel_attn_r]), kwargs = {})
+    %add_13 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_19, %p_layer_2_rel_attn_r_w_bias), kwargs = {})
+    %einsum_23 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_13, %einsum_20]), kwargs = {})
+    %add_14 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_19, %p_layer_2_rel_attn_r_r_bias), kwargs = {})
+    %einsum_24 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_14, %einsum_22]), kwargs = {})
+    %reshape_4 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_24, [1, 12, 16, 8]), kwargs = {})
+    %slice_6 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_4, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_6, [1, 12, 8, 15]), kwargs = {})
+    %arange_4 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_2 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_5, 3, %arange_4), kwargs = {})
+    %add_15 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_23, %index_select_2), kwargs = {})
+    %add_16 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_15, 0), kwargs = {})
+    %mul_5 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_16, 0.125), kwargs = {})
+    %einsum_25 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_6 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_25, 1e+30), kwargs = {})
+    %sub_2 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_5, %mul_6), kwargs = {})
+    %softmax_2 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_2, 3), kwargs = {})
+    %dropout_10 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_2, 0.1, False), kwargs = {})
+    %einsum_26 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_10, %einsum_21]), kwargs = {})
+    %einsum_27 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_26, %p_layer_2_rel_attn_o]), kwargs = {})
+    %dropout_11 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_27, 0.1, False), kwargs = {})
+    %add_17 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_11, %layer_norm_3), kwargs = {})
+    %layer_norm_4 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_17, [768], %p_layer_2_rel_attn_layer_norm_weight, %p_layer_2_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_4 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_4, %p_layer_2_ff_layer_1_weight, %p_layer_2_ff_layer_1_bias), kwargs = {})
+    %gelu_2 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_4,), kwargs = {})
+    %dropout_12 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_2, 0.1, False), kwargs = {})
+    %linear_5 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_12, %p_layer_2_ff_layer_2_weight, %p_layer_2_ff_layer_2_bias), kwargs = {})
+    %dropout_13 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_5, 0.1, False), kwargs = {})
+    %add_18 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_13, %layer_norm_4), kwargs = {})
+    %layer_norm_5 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_18, [768], %p_layer_2_ff_layer_norm_weight, %p_layer_2_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_7 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_5, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_3 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_7,), kwargs = {})
+    %einsum_28 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_5, %p_layer_3_rel_attn_q]), kwargs = {})
+    %einsum_29 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_5, %p_layer_3_rel_attn_k]), kwargs = {})
+    %einsum_30 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_5, %p_layer_3_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_9 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_8,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_9 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_8, torch.float32), kwargs = {})
+    %einsum_31 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_9, %p_layer_3_rel_attn_r]), kwargs = {})
+    %add_19 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_28, %p_layer_3_rel_attn_r_w_bias), kwargs = {})
+    %einsum_32 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_19, %einsum_29]), kwargs = {})
+    %add_20 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_28, %p_layer_3_rel_attn_r_r_bias), kwargs = {})
+    %einsum_33 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_20, %einsum_31]), kwargs = {})
+    %reshape_6 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_33, [1, 12, 16, 8]), kwargs = {})
+    %slice_8 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_6, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_7 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_8, [1, 12, 8, 15]), kwargs = {})
+    %arange_5 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_3 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_7, 3, %arange_5), kwargs = {})
+    %add_21 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_32, %index_select_3), kwargs = {})
+    %add_22 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_21, 0), kwargs = {})
+    %mul_7 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_22, 0.125), kwargs = {})
+    %einsum_34 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_8 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_34, 1e+30), kwargs = {})
+    %sub_3 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_7, %mul_8), kwargs = {})
+    %softmax_3 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_3, 3), kwargs = {})
+    %dropout_14 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_3, 0.1, False), kwargs = {})
+    %einsum_35 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_14, %einsum_30]), kwargs = {})
+    %einsum_36 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_35, %p_layer_3_rel_attn_o]), kwargs = {})
+    %dropout_15 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_36, 0.1, False), kwargs = {})
+    %add_23 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_15, %layer_norm_5), kwargs = {})
+    %layer_norm_6 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_23, [768], %p_layer_3_rel_attn_layer_norm_weight, %p_layer_3_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_6 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_6, %p_layer_3_ff_layer_1_weight, %p_layer_3_ff_layer_1_bias), kwargs = {})
+    %gelu_3 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_6,), kwargs = {})
+    %dropout_16 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_3, 0.1, False), kwargs = {})
+    %linear_7 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_16, %p_layer_3_ff_layer_2_weight, %p_layer_3_ff_layer_2_bias), kwargs = {})
+    %dropout_17 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_7, 0.1, False), kwargs = {})
+    %add_24 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_17, %layer_norm_6), kwargs = {})
+    %layer_norm_7 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_24, [768], %p_layer_3_ff_layer_norm_weight, %p_layer_3_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_9 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_7, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_4 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_9,), kwargs = {})
+    %einsum_37 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_7, %p_layer_4_rel_attn_q]), kwargs = {})
+    %einsum_38 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_7, %p_layer_4_rel_attn_k]), kwargs = {})
+    %einsum_39 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_7, %p_layer_4_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_10 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_9,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_10 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_9, torch.float32), kwargs = {})
+    %einsum_40 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_10, %p_layer_4_rel_attn_r]), kwargs = {})
+    %add_25 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_37, %p_layer_4_rel_attn_r_w_bias), kwargs = {})
+    %einsum_41 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_25, %einsum_38]), kwargs = {})
+    %add_26 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_37, %p_layer_4_rel_attn_r_r_bias), kwargs = {})
+    %einsum_42 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_26, %einsum_40]), kwargs = {})
+    %reshape_8 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_42, [1, 12, 16, 8]), kwargs = {})
+    %slice_10 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_8, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_9 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_10, [1, 12, 8, 15]), kwargs = {})
+    %arange_6 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_4 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_9, 3, %arange_6), kwargs = {})
+    %add_27 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_41, %index_select_4), kwargs = {})
+    %add_28 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_27, 0), kwargs = {})
+    %mul_9 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_28, 0.125), kwargs = {})
+    %einsum_43 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_10 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_43, 1e+30), kwargs = {})
+    %sub_4 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_9, %mul_10), kwargs = {})
+    %softmax_4 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_4, 3), kwargs = {})
+    %dropout_18 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_4, 0.1, False), kwargs = {})
+    %einsum_44 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_18, %einsum_39]), kwargs = {})
+    %einsum_45 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_44, %p_layer_4_rel_attn_o]), kwargs = {})
+    %dropout_19 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_45, 0.1, False), kwargs = {})
+    %add_29 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_19, %layer_norm_7), kwargs = {})
+    %layer_norm_8 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_29, [768], %p_layer_4_rel_attn_layer_norm_weight, %p_layer_4_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_8 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_8, %p_layer_4_ff_layer_1_weight, %p_layer_4_ff_layer_1_bias), kwargs = {})
+    %gelu_4 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_8,), kwargs = {})
+    %dropout_20 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_4, 0.1, False), kwargs = {})
+    %linear_9 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_20, %p_layer_4_ff_layer_2_weight, %p_layer_4_ff_layer_2_bias), kwargs = {})
+    %dropout_21 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_9, 0.1, False), kwargs = {})
+    %add_30 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_21, %layer_norm_8), kwargs = {})
+    %layer_norm_9 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_30, [768], %p_layer_4_ff_layer_norm_weight, %p_layer_4_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_11 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_9, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_5 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_11,), kwargs = {})
+    %einsum_46 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_9, %p_layer_5_rel_attn_q]), kwargs = {})
+    %einsum_47 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_9, %p_layer_5_rel_attn_k]), kwargs = {})
+    %einsum_48 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_9, %p_layer_5_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_11 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_10,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_11 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_10, torch.float32), kwargs = {})
+    %einsum_49 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_11, %p_layer_5_rel_attn_r]), kwargs = {})
+    %add_31 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_46, %p_layer_5_rel_attn_r_w_bias), kwargs = {})
+    %einsum_50 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_31, %einsum_47]), kwargs = {})
+    %add_32 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_46, %p_layer_5_rel_attn_r_r_bias), kwargs = {})
+    %einsum_51 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_32, %einsum_49]), kwargs = {})
+    %reshape_10 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_51, [1, 12, 16, 8]), kwargs = {})
+    %slice_12 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_10, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_11 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_12, [1, 12, 8, 15]), kwargs = {})
+    %arange_7 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_5 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_11, 3, %arange_7), kwargs = {})
+    %add_33 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_50, %index_select_5), kwargs = {})
+    %add_34 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_33, 0), kwargs = {})
+    %mul_11 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_34, 0.125), kwargs = {})
+    %einsum_52 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_12 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_52, 1e+30), kwargs = {})
+    %sub_5 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_11, %mul_12), kwargs = {})
+    %softmax_5 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_5, 3), kwargs = {})
+    %dropout_22 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_5, 0.1, False), kwargs = {})
+    %einsum_53 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_22, %einsum_48]), kwargs = {})
+    %einsum_54 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_53, %p_layer_5_rel_attn_o]), kwargs = {})
+    %dropout_23 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_54, 0.1, False), kwargs = {})
+    %add_35 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_23, %layer_norm_9), kwargs = {})
+    %layer_norm_10 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_35, [768], %p_layer_5_rel_attn_layer_norm_weight, %p_layer_5_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_10 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_10, %p_layer_5_ff_layer_1_weight, %p_layer_5_ff_layer_1_bias), kwargs = {})
+    %gelu_5 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_10,), kwargs = {})
+    %dropout_24 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_5, 0.1, False), kwargs = {})
+    %linear_11 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_24, %p_layer_5_ff_layer_2_weight, %p_layer_5_ff_layer_2_bias), kwargs = {})
+    %dropout_25 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_11, 0.1, False), kwargs = {})
+    %add_36 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_25, %layer_norm_10), kwargs = {})
+    %layer_norm_11 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_36, [768], %p_layer_5_ff_layer_norm_weight, %p_layer_5_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_13 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_11, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_6 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_13,), kwargs = {})
+    %einsum_55 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_11, %p_layer_6_rel_attn_q]), kwargs = {})
+    %einsum_56 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_11, %p_layer_6_rel_attn_k]), kwargs = {})
+    %einsum_57 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_11, %p_layer_6_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_12 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_11,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_12 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_11, torch.float32), kwargs = {})
+    %einsum_58 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_12, %p_layer_6_rel_attn_r]), kwargs = {})
+    %add_37 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_55, %p_layer_6_rel_attn_r_w_bias), kwargs = {})
+    %einsum_59 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_37, %einsum_56]), kwargs = {})
+    %add_38 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_55, %p_layer_6_rel_attn_r_r_bias), kwargs = {})
+    %einsum_60 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_38, %einsum_58]), kwargs = {})
+    %reshape_12 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_60, [1, 12, 16, 8]), kwargs = {})
+    %slice_14 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_12, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_13 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_14, [1, 12, 8, 15]), kwargs = {})
+    %arange_8 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_6 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_13, 3, %arange_8), kwargs = {})
+    %add_39 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_59, %index_select_6), kwargs = {})
+    %add_40 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_39, 0), kwargs = {})
+    %mul_13 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_40, 0.125), kwargs = {})
+    %einsum_61 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_14 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_61, 1e+30), kwargs = {})
+    %sub_6 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_13, %mul_14), kwargs = {})
+    %softmax_6 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_6, 3), kwargs = {})
+    %dropout_26 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_6, 0.1, False), kwargs = {})
+    %einsum_62 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_26, %einsum_57]), kwargs = {})
+    %einsum_63 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_62, %p_layer_6_rel_attn_o]), kwargs = {})
+    %dropout_27 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_63, 0.1, False), kwargs = {})
+    %add_41 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_27, %layer_norm_11), kwargs = {})
+    %layer_norm_12 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_41, [768], %p_layer_6_rel_attn_layer_norm_weight, %p_layer_6_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_12 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_12, %p_layer_6_ff_layer_1_weight, %p_layer_6_ff_layer_1_bias), kwargs = {})
+    %gelu_6 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_12,), kwargs = {})
+    %dropout_28 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_6, 0.1, False), kwargs = {})
+    %linear_13 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_28, %p_layer_6_ff_layer_2_weight, %p_layer_6_ff_layer_2_bias), kwargs = {})
+    %dropout_29 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_13, 0.1, False), kwargs = {})
+    %add_42 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_29, %layer_norm_12), kwargs = {})
+    %layer_norm_13 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_42, [768], %p_layer_6_ff_layer_norm_weight, %p_layer_6_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_15 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_13, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_7 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_15,), kwargs = {})
+    %einsum_64 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_13, %p_layer_7_rel_attn_q]), kwargs = {})
+    %einsum_65 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_13, %p_layer_7_rel_attn_k]), kwargs = {})
+    %einsum_66 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_13, %p_layer_7_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_13 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_12,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_13 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_12, torch.float32), kwargs = {})
+    %einsum_67 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_13, %p_layer_7_rel_attn_r]), kwargs = {})
+    %add_43 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_64, %p_layer_7_rel_attn_r_w_bias), kwargs = {})
+    %einsum_68 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_43, %einsum_65]), kwargs = {})
+    %add_44 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_64, %p_layer_7_rel_attn_r_r_bias), kwargs = {})
+    %einsum_69 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_44, %einsum_67]), kwargs = {})
+    %reshape_14 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_69, [1, 12, 16, 8]), kwargs = {})
+    %slice_16 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_14, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_15 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_16, [1, 12, 8, 15]), kwargs = {})
+    %arange_9 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_7 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_15, 3, %arange_9), kwargs = {})
+    %add_45 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_68, %index_select_7), kwargs = {})
+    %add_46 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_45, 0), kwargs = {})
+    %mul_15 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_46, 0.125), kwargs = {})
+    %einsum_70 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_16 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_70, 1e+30), kwargs = {})
+    %sub_7 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_15, %mul_16), kwargs = {})
+    %softmax_7 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_7, 3), kwargs = {})
+    %dropout_30 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_7, 0.1, False), kwargs = {})
+    %einsum_71 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_30, %einsum_66]), kwargs = {})
+    %einsum_72 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_71, %p_layer_7_rel_attn_o]), kwargs = {})
+    %dropout_31 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_72, 0.1, False), kwargs = {})
+    %add_47 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_31, %layer_norm_13), kwargs = {})
+    %layer_norm_14 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_47, [768], %p_layer_7_rel_attn_layer_norm_weight, %p_layer_7_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_14 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_14, %p_layer_7_ff_layer_1_weight, %p_layer_7_ff_layer_1_bias), kwargs = {})
+    %gelu_7 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_14,), kwargs = {})
+    %dropout_32 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_7, 0.1, False), kwargs = {})
+    %linear_15 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_32, %p_layer_7_ff_layer_2_weight, %p_layer_7_ff_layer_2_bias), kwargs = {})
+    %dropout_33 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_15, 0.1, False), kwargs = {})
+    %add_48 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_33, %layer_norm_14), kwargs = {})
+    %layer_norm_15 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_48, [768], %p_layer_7_ff_layer_norm_weight, %p_layer_7_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_17 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_15, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_8 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_17,), kwargs = {})
+    %einsum_73 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_15, %p_layer_8_rel_attn_q]), kwargs = {})
+    %einsum_74 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_15, %p_layer_8_rel_attn_k]), kwargs = {})
+    %einsum_75 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_15, %p_layer_8_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_14 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_13,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_14 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_13, torch.float32), kwargs = {})
+    %einsum_76 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_14, %p_layer_8_rel_attn_r]), kwargs = {})
+    %add_49 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_73, %p_layer_8_rel_attn_r_w_bias), kwargs = {})
+    %einsum_77 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_49, %einsum_74]), kwargs = {})
+    %add_50 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_73, %p_layer_8_rel_attn_r_r_bias), kwargs = {})
+    %einsum_78 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_50, %einsum_76]), kwargs = {})
+    %reshape_16 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_78, [1, 12, 16, 8]), kwargs = {})
+    %slice_18 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_16, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_17 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_18, [1, 12, 8, 15]), kwargs = {})
+    %arange_10 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_8 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_17, 3, %arange_10), kwargs = {})
+    %add_51 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_77, %index_select_8), kwargs = {})
+    %add_52 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_51, 0), kwargs = {})
+    %mul_17 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_52, 0.125), kwargs = {})
+    %einsum_79 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_18 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_79, 1e+30), kwargs = {})
+    %sub_8 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_17, %mul_18), kwargs = {})
+    %softmax_8 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_8, 3), kwargs = {})
+    %dropout_34 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_8, 0.1, False), kwargs = {})
+    %einsum_80 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_34, %einsum_75]), kwargs = {})
+    %einsum_81 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_80, %p_layer_8_rel_attn_o]), kwargs = {})
+    %dropout_35 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_81, 0.1, False), kwargs = {})
+    %add_53 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_35, %layer_norm_15), kwargs = {})
+    %layer_norm_16 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_53, [768], %p_layer_8_rel_attn_layer_norm_weight, %p_layer_8_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_16 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_16, %p_layer_8_ff_layer_1_weight, %p_layer_8_ff_layer_1_bias), kwargs = {})
+    %gelu_8 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_16,), kwargs = {})
+    %dropout_36 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_8, 0.1, False), kwargs = {})
+    %linear_17 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_36, %p_layer_8_ff_layer_2_weight, %p_layer_8_ff_layer_2_bias), kwargs = {})
+    %dropout_37 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_17, 0.1, False), kwargs = {})
+    %add_54 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_37, %layer_norm_16), kwargs = {})
+    %layer_norm_17 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_54, [768], %p_layer_8_ff_layer_norm_weight, %p_layer_8_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_19 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_17, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_9 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_19,), kwargs = {})
+    %einsum_82 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_17, %p_layer_9_rel_attn_q]), kwargs = {})
+    %einsum_83 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_17, %p_layer_9_rel_attn_k]), kwargs = {})
+    %einsum_84 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_17, %p_layer_9_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_15 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_14,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_15 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_14, torch.float32), kwargs = {})
+    %einsum_85 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_15, %p_layer_9_rel_attn_r]), kwargs = {})
+    %add_55 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_82, %p_layer_9_rel_attn_r_w_bias), kwargs = {})
+    %einsum_86 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_55, %einsum_83]), kwargs = {})
+    %add_56 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_82, %p_layer_9_rel_attn_r_r_bias), kwargs = {})
+    %einsum_87 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_56, %einsum_85]), kwargs = {})
+    %reshape_18 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_87, [1, 12, 16, 8]), kwargs = {})
+    %slice_20 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_18, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_19 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_20, [1, 12, 8, 15]), kwargs = {})
+    %arange_11 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_9 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_19, 3, %arange_11), kwargs = {})
+    %add_57 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_86, %index_select_9), kwargs = {})
+    %add_58 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_57, 0), kwargs = {})
+    %mul_19 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_58, 0.125), kwargs = {})
+    %einsum_88 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_20 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_88, 1e+30), kwargs = {})
+    %sub_9 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_19, %mul_20), kwargs = {})
+    %softmax_9 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_9, 3), kwargs = {})
+    %dropout_38 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_9, 0.1, False), kwargs = {})
+    %einsum_89 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_38, %einsum_84]), kwargs = {})
+    %einsum_90 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_89, %p_layer_9_rel_attn_o]), kwargs = {})
+    %dropout_39 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_90, 0.1, False), kwargs = {})
+    %add_59 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_39, %layer_norm_17), kwargs = {})
+    %layer_norm_18 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_59, [768], %p_layer_9_rel_attn_layer_norm_weight, %p_layer_9_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_18 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_18, %p_layer_9_ff_layer_1_weight, %p_layer_9_ff_layer_1_bias), kwargs = {})
+    %gelu_9 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_18,), kwargs = {})
+    %dropout_40 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_9, 0.1, False), kwargs = {})
+    %linear_19 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_40, %p_layer_9_ff_layer_2_weight, %p_layer_9_ff_layer_2_bias), kwargs = {})
+    %dropout_41 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_19, 0.1, False), kwargs = {})
+    %add_60 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_41, %layer_norm_18), kwargs = {})
+    %layer_norm_19 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_60, [768], %p_layer_9_ff_layer_norm_weight, %p_layer_9_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_21 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_19, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_10 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_21,), kwargs = {})
+    %einsum_91 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_19, %p_layer_10_rel_attn_q]), kwargs = {})
+    %einsum_92 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_19, %p_layer_10_rel_attn_k]), kwargs = {})
+    %einsum_93 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_19, %p_layer_10_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_16 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_15,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_16 : [num_users=3] = call_function[target=torch.ops.aten.to.dtype](args = (%to_15, torch.float32), kwargs = {})
+    %einsum_94 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_16, %p_layer_10_rel_attn_r]), kwargs = {})
+    %add_61 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_91, %p_layer_10_rel_attn_r_w_bias), kwargs = {})
+    %einsum_95 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_61, %einsum_92]), kwargs = {})
+    %add_62 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_91, %p_layer_10_rel_attn_r_r_bias), kwargs = {})
+    %einsum_96 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_62, %einsum_94]), kwargs = {})
+    %reshape_20 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_96, [1, 12, 16, 8]), kwargs = {})
+    %slice_22 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_20, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_21 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_22, [1, 12, 8, 15]), kwargs = {})
+    %arange_12 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_10 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_21, 3, %arange_12), kwargs = {})
+    %add_63 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_95, %index_select_10), kwargs = {})
+    %add_64 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_63, 0), kwargs = {})
+    %mul_21 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_64, 0.125), kwargs = {})
+    %einsum_97 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_22 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_97, 1e+30), kwargs = {})
+    %sub_10 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_21, %mul_22), kwargs = {})
+    %softmax_10 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_10, 3), kwargs = {})
+    %dropout_42 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_10, 0.1, False), kwargs = {})
+    %einsum_98 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_42, %einsum_93]), kwargs = {})
+    %einsum_99 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_98, %p_layer_10_rel_attn_o]), kwargs = {})
+    %dropout_43 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_99, 0.1, False), kwargs = {})
+    %add_65 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_43, %layer_norm_19), kwargs = {})
+    %layer_norm_20 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_65, [768], %p_layer_10_rel_attn_layer_norm_weight, %p_layer_10_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_20 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_20, %p_layer_10_ff_layer_1_weight, %p_layer_10_ff_layer_1_bias), kwargs = {})
+    %gelu_10 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_20,), kwargs = {})
+    %dropout_44 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_10, 0.1, False), kwargs = {})
+    %linear_21 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_44, %p_layer_10_ff_layer_2_weight, %p_layer_10_ff_layer_2_bias), kwargs = {})
+    %dropout_45 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_21, 0.1, False), kwargs = {})
+    %add_66 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_45, %layer_norm_20), kwargs = {})
+    %layer_norm_21 : [num_users=5] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_66, [768], %p_layer_10_ff_layer_norm_weight, %p_layer_10_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %slice_23 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%layer_norm_21, 0, 0, 9223372036854775807), kwargs = {})
+    %detach_11 : [num_users=1] = call_function[target=torch.ops.aten.detach.default](args = (%slice_23,), kwargs = {})
+    %einsum_100 : [num_users=2] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_21, %p_layer_11_rel_attn_q]), kwargs = {})
+    %einsum_101 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_21, %p_layer_11_rel_attn_k]), kwargs = {})
+    %einsum_102 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%layer_norm_21, %p_layer_11_rel_attn_v]), kwargs = {})
+    %_assert_tensor_metadata_default_17 : [num_users=0] = call_function[target=torch.ops.aten._assert_tensor_metadata.default](args = (%to_16,), kwargs = {dtype: torch.float32, device: cuda:0, layout: torch.strided})
+    %to_17 : [num_users=1] = call_function[target=torch.ops.aten.to.dtype](args = (%to_16, torch.float32), kwargs = {})
+    %einsum_103 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibh,hnd->ibnd, [%to_17, %p_layer_11_rel_attn_r]), kwargs = {})
+    %add_67 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_100, %p_layer_11_rel_attn_r_w_bias), kwargs = {})
+    %einsum_104 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_67, %einsum_101]), kwargs = {})
+    %add_68 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_100, %p_layer_11_rel_attn_r_r_bias), kwargs = {})
+    %einsum_105 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,jbnd->bnij, [%add_68, %einsum_103]), kwargs = {})
+    %reshape_22 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%einsum_105, [1, 12, 16, 8]), kwargs = {})
+    %slice_24 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%reshape_22, 2, 1, 9223372036854775807), kwargs = {})
+    %reshape_23 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%slice_24, [1, 12, 8, 15]), kwargs = {})
+    %arange_13 : [num_users=1] = call_function[target=torch.ops.aten.arange.default](args = (8,), kwargs = {dtype: torch.int64, device: cuda:0, pin_memory: False})
+    %index_select_11 : [num_users=1] = call_function[target=torch.ops.aten.index_select.default](args = (%reshape_23, 3, %arange_13), kwargs = {})
+    %add_69 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%einsum_104, %index_select_11), kwargs = {})
+    %add_70 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%add_69, 0), kwargs = {})
+    %mul_23 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%add_70, 0.125), kwargs = {})
+    %einsum_106 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ijbn->bnij, [%to_2]), kwargs = {})
+    %mul_24 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%einsum_106, 1e+30), kwargs = {})
+    %sub_11 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_23, %mul_24), kwargs = {})
+    %softmax_11 : [num_users=1] = call_function[target=torch.ops.aten.softmax.int](args = (%sub_11, 3), kwargs = {})
+    %dropout_46 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%softmax_11, 0.1, False), kwargs = {})
+    %einsum_107 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (bnij,jbnd->ibnd, [%dropout_46, %einsum_102]), kwargs = {})
+    %einsum_108 : [num_users=1] = call_function[target=torch.ops.aten.einsum.default](args = (ibnd,hnd->ibh, [%einsum_107, %p_layer_11_rel_attn_o]), kwargs = {})
+    %dropout_47 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%einsum_108, 0.1, False), kwargs = {})
+    %add_71 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_47, %layer_norm_21), kwargs = {})
+    %layer_norm_22 : [num_users=2] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_71, [768], %p_layer_11_rel_attn_layer_norm_weight, %p_layer_11_rel_attn_layer_norm_bias, 1e-12), kwargs = {})
+    %linear_22 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%layer_norm_22, %p_layer_11_ff_layer_1_weight, %p_layer_11_ff_layer_1_bias), kwargs = {})
+    %gelu_11 : [num_users=1] = call_function[target=torch.ops.aten.gelu.default](args = (%linear_22,), kwargs = {})
+    %dropout_48 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%gelu_11, 0.1, False), kwargs = {})
+    %linear_23 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%dropout_48, %p_layer_11_ff_layer_2_weight, %p_layer_11_ff_layer_2_bias), kwargs = {})
+    %dropout_49 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%linear_23, 0.1, False), kwargs = {})
+    %add_72 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%dropout_49, %layer_norm_22), kwargs = {})
+    %layer_norm_23 : [num_users=1] = call_function[target=torch.ops.aten.layer_norm.default](args = (%add_72, [768], %p_layer_11_ff_layer_norm_weight, %p_layer_11_ff_layer_norm_bias, 1e-12), kwargs = {})
+    %dropout_50 : [num_users=1] = call_function[target=torch.ops.aten.dropout.default](args = (%layer_norm_23, 0.1, False), kwargs = {})
+    %permute : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%dropout_50, [1, 0, 2]), kwargs = {})
+    return (permute, detach, detach_1, detach_2, detach_3, detach_4, detach_5, detach_6, detach_7, detach_8, detach_9, detach_10, detach_11)

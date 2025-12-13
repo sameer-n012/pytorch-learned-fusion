@@ -30,7 +30,7 @@ async_compile = AsyncCompile()
 empty_strided_p2p = torch._C._distributed_c10d._SymmetricMemory.empty_strided_p2p
 
 
-cpp_fused__to_copy_add_embedding_expand_lift_fresh_masked_fill_native_layer_norm_native_layer_norm_backward_slice_sub_unsqueeze_0 = async_compile.cpp_pybinding(['float*', 'const int64_t*', 'const float*', 'const int64_t*', 'const float*', 'const int64_t*', 'const float*', 'const float*', 'const float*', 'const int64_t*', 'float*', 'float*', 'float*', 'float*', 'float*'], '''
+cpp_fused__to_copy_add_embedding_expand_lift_fresh_masked_fill_native_layer_norm_native_layer_norm_backward_slice_sub_unsqueeze_0 = async_compile.cpp_pybinding(['float*', 'const int64_t*', 'const float*', 'const int64_t*', 'const float*', 'const int64_t*', 'const float*', 'const float*', 'const float*', 'const int64_t*', 'float*', 'float*', 'float*', 'float*', 'float*'], r'''
 #include <torch/csrc/inductor/cpp_prefix.h>
 extern "C"  void  kernel(float* in_out_ptr0,
                        const int64_t* in_ptr0,
@@ -49,138 +49,148 @@ extern "C"  void  kernel(float* in_out_ptr0,
                        float* out_ptr5)
 {
     auto out_ptr0 = in_out_ptr0;
+    #pragma omp parallel num_threads(8)
     {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+        int tid = omp_get_thread_num();
         {
+            #pragma omp for
+            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
             {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
+                {
+                    Welford<float> tmp_acc0 = Welford<float>();
+                    Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
+                    Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
+                    static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
+                    static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
+                    for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
+                    {
+                        {
+                            if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
+                            {
+                                auto tmp0 = in_ptr0[static_cast<int64_t>(x0)];
+                                auto tmp10 = in_ptr2[static_cast<int64_t>(x0)];
+                                auto tmp21 = in_ptr4[static_cast<int64_t>(x0)];
+                                auto tmp1 = 30522L;
+                                auto tmp2 = c10::convert<int64_t>(tmp1);
+                                auto tmp3 = int64_t(tmp0 + tmp2);
+                                auto tmp4 = tmp0 < 0;
+                                auto tmp5 = tmp4 ? tmp3 : tmp0;
+                                auto tmp6 = tmp5;
+                                auto tmp7 = c10::convert<int64_t>(tmp6);
+                                TORCH_CHECK((0 <= tmp7) & (tmp7 < 30522L), "index out of bounds: 0 <= tmp7 < 30522L");
+                                auto tmp9 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*tmp5), static_cast<int64_t>(8));
+                                auto tmp11 = 2L;
+                                auto tmp12 = c10::convert<int64_t>(tmp11);
+                                auto tmp13 = int64_t(tmp10 + tmp12);
+                                auto tmp14 = tmp10 < 0;
+                                auto tmp15 = tmp14 ? tmp13 : tmp10;
+                                auto tmp16 = tmp15;
+                                auto tmp17 = c10::convert<int64_t>(tmp16);
+                                TORCH_CHECK((0 <= tmp17) & (tmp17 < 2L), "index out of bounds: 0 <= tmp17 < 2L");
+                                auto tmp19 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1 + 768L*tmp15), static_cast<int64_t>(8));
+                                auto tmp20 = tmp9 + tmp19;
+                                auto tmp22 = 512L;
+                                auto tmp23 = c10::convert<int64_t>(tmp22);
+                                auto tmp24 = int64_t(tmp21 + tmp23);
+                                auto tmp25 = tmp21 < 0;
+                                auto tmp26 = tmp25 ? tmp24 : tmp21;
+                                auto tmp27 = tmp26;
+                                auto tmp28 = c10::convert<int64_t>(tmp27);
+                                TORCH_CHECK((0 <= tmp28) & (tmp28 < 512L), "index out of bounds: 0 <= tmp28 < 512L");
+                                auto tmp30 = at::vec::Vectorized<float>::loadu(in_ptr5 + static_cast<int64_t>(x1 + 768L*tmp26), static_cast<int64_t>(8));
+                                auto tmp31 = tmp20 + tmp30;
+                                tmp31.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
+                                tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp31, &welford_helper0);
+                            }
+                        }
+                    }
+                    tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
+                    masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
+                    tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
+                    tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
+                    out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
+                    out_ptr2[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
+                }
+            }
+        }
+        {
+            #pragma omp for
+            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+            {
                 for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
                 {
                     {
                         if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
                         {
-                            auto tmp0 = in_ptr0[static_cast<int64_t>(x0)];
-                            auto tmp10 = in_ptr2[static_cast<int64_t>(x0)];
-                            auto tmp21 = in_ptr4[static_cast<int64_t>(x0)];
-                            auto tmp1 = 30522L;
-                            auto tmp2 = c10::convert<int64_t>(tmp1);
-                            auto tmp3 = int64_t(tmp0 + tmp2);
-                            auto tmp4 = tmp0 < 0;
-                            auto tmp5 = tmp4 ? tmp3 : tmp0;
-                            auto tmp6 = tmp5;
-                            auto tmp7 = c10::convert<int64_t>(tmp6);
-                            TORCH_CHECK((0 <= tmp7) & (tmp7 < 30522L), "index out of bounds: 0 <= tmp7 < 30522L");
-                            auto tmp9 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*tmp5), static_cast<int64_t>(8));
-                            auto tmp11 = 2L;
-                            auto tmp12 = c10::convert<int64_t>(tmp11);
-                            auto tmp13 = int64_t(tmp10 + tmp12);
-                            auto tmp14 = tmp10 < 0;
-                            auto tmp15 = tmp14 ? tmp13 : tmp10;
-                            auto tmp16 = tmp15;
-                            auto tmp17 = c10::convert<int64_t>(tmp16);
-                            TORCH_CHECK((0 <= tmp17) & (tmp17 < 2L), "index out of bounds: 0 <= tmp17 < 2L");
-                            auto tmp19 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1 + 768L*tmp15), static_cast<int64_t>(8));
-                            auto tmp20 = tmp9 + tmp19;
-                            auto tmp22 = 512L;
-                            auto tmp23 = c10::convert<int64_t>(tmp22);
-                            auto tmp24 = int64_t(tmp21 + tmp23);
-                            auto tmp25 = tmp21 < 0;
-                            auto tmp26 = tmp25 ? tmp24 : tmp21;
-                            auto tmp27 = tmp26;
-                            auto tmp28 = c10::convert<int64_t>(tmp27);
-                            TORCH_CHECK((0 <= tmp28) & (tmp28 < 512L), "index out of bounds: 0 <= tmp28 < 512L");
-                            auto tmp30 = at::vec::Vectorized<float>::loadu(in_ptr5 + static_cast<int64_t>(x1 + 768L*tmp26), static_cast<int64_t>(8));
-                            auto tmp31 = tmp20 + tmp30;
-                            tmp31.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp31, &welford_helper0);
+                            auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
+                            auto tmp1 = out_ptr1[static_cast<int64_t>(x0)];
+                            auto tmp4 = out_ptr2[static_cast<int64_t>(x0)];
+                            auto tmp12 = at::vec::Vectorized<float>::loadu(in_ptr6 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
+                            auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr7 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
+                            auto tmp2 = at::vec::Vectorized<float>(tmp1);
+                            auto tmp3 = tmp0 - tmp2;
+                            auto tmp5 = static_cast<float>(768.0);
+                            auto tmp6 = tmp4 / tmp5;
+                            auto tmp7 = static_cast<float>(1e-12);
+                            auto tmp8 = float(tmp6 + tmp7);
+                            auto tmp9 = 1 / std::sqrt(tmp8);
+                            auto tmp10 = at::vec::Vectorized<float>(tmp9);
+                            auto tmp11 = tmp3 * tmp10;
+                            auto tmp13 = tmp11 * tmp12;
+                            auto tmp15 = tmp13 + tmp14;
+                            tmp11.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
+                            tmp15.store(out_ptr3 + static_cast<int64_t>(x1 + 768L*x0));
                         }
                     }
                 }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr2[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
             }
         }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+        #pragma omp single
         {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
             {
+                for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
                 {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
                     {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp4 = out_ptr2[static_cast<int64_t>(x0)];
-                        auto tmp12 = at::vec::Vectorized<float>::loadu(in_ptr6 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr7 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 - tmp2;
-                        auto tmp5 = static_cast<float>(768.0);
-                        auto tmp6 = tmp4 / tmp5;
-                        auto tmp7 = static_cast<float>(1e-12);
-                        auto tmp8 = float(tmp6 + tmp7);
-                        auto tmp9 = 1 / std::sqrt(tmp8);
-                        auto tmp10 = at::vec::Vectorized<float>(tmp9);
-                        auto tmp11 = tmp3 * tmp10;
-                        auto tmp13 = tmp11 * tmp12;
-                        auto tmp15 = tmp13 + tmp14;
-                        tmp11.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp15.store(out_ptr3 + static_cast<int64_t>(x1 + 768L*x0));
+                        if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
+                        {
+                            auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr2 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
+                            auto tmp1 = static_cast<float>(768.0);
+                            auto tmp2 = at::vec::Vectorized<float>(tmp1);
+                            auto tmp3 = tmp0 / tmp2;
+                            auto tmp4 = static_cast<float>(1e-12);
+                            auto tmp5 = at::vec::Vectorized<float>(tmp4);
+                            auto tmp6 = tmp3 + tmp5;
+                            auto tmp7 = tmp6.rsqrt();
+                            auto tmp8 = tmp7 / tmp2;
+                            tmp8.store(out_ptr4 + static_cast<int64_t>(x0));
+                        }
                     }
                 }
             }
         }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
+        #pragma omp single
         {
             {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
+                #pragma GCC ivdep
+                for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
                 {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr2 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr4 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(8L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(8L)))
+                    for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(8L); x1+=static_cast<int64_t>(8L))
                     {
-                        auto tmp0 = at::vec::VectorizedN<int64_t,2>::loadu(in_ptr8 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::convert<float,1,int64_t,2>(tmp0);
-                        auto tmp2 = static_cast<float>(1.0);
-                        auto tmp3 = at::vec::Vectorized<float>(tmp2);
-                        auto tmp4 = tmp3 - tmp1;
-                        auto tmp5 = at::vec::VecMask<float,1>::from<float,1>(tmp4);
-                        auto tmp6 = static_cast<float>(-3.4028234663852886e+38);
-                        auto tmp7 = at::vec::Vectorized<float>(tmp6);
-                        auto tmp8 = decltype(tmp7)::blendv(tmp4, tmp7, tmp5.template cast<float,1>());
-                        tmp8.store(out_ptr5 + static_cast<int64_t>(x1 + 8L*x0));
+                        {
+                            if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(8L)))
+                            {
+                                auto tmp0 = at::vec::VectorizedN<int64_t,2>::loadu(in_ptr8 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
+                                auto tmp1 = at::vec::convert<float,1,int64_t,2>(tmp0);
+                                auto tmp2 = static_cast<float>(1.0);
+                                auto tmp3 = at::vec::Vectorized<float>(tmp2);
+                                auto tmp4 = tmp3 - tmp1;
+                                auto tmp5 = at::vec::VecMask<float,1>::from<float,1>(tmp4);
+                                auto tmp6 = static_cast<float>(-3.4028234663852886e+38);
+                                auto tmp7 = at::vec::Vectorized<float>(tmp6);
+                                auto tmp8 = decltype(tmp7)::blendv(tmp4, tmp7, tmp5.template cast<float,1>());
+                                tmp8.store(out_ptr5 + static_cast<int64_t>(x1 + 8L*x0));
+                            }
+                        }
                     }
                 }
             }
@@ -190,7 +200,7 @@ extern "C"  void  kernel(float* in_out_ptr0,
 ''')
 
 
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
+cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], r'''
 #include <torch/csrc/inductor/cpp_prefix.h>
 extern "C"  void  kernel(float* in_out_ptr0,
                        const float* in_ptr1,
@@ -202,16 +212,44 @@ extern "C"  void  kernel(float* in_out_ptr0,
                        float* out_ptr3)
 {
     auto in_ptr0 = in_out_ptr0;
+    #pragma omp parallel num_threads(8)
     {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+        int tid = omp_get_thread_num();
         {
+            #pragma omp for
+            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
             {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
+                {
+                    Welford<float> tmp_acc0 = Welford<float>();
+                    Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
+                    Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
+                    static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
+                    static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
+                    for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
+                    {
+                        {
+                            if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
+                            {
+                                auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
+                                auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
+                                auto tmp2 = tmp0 + tmp1;
+                                tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
+                            }
+                        }
+                    }
+                    tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
+                    masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
+                    tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
+                    tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
+                    out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
+                    out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
+                }
+            }
+        }
+        {
+            #pragma omp for
+            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+            {
                 for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
                 {
                     {
@@ -219,70 +257,49 @@ extern "C"  void  kernel(float* in_out_ptr0,
                         {
                             auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
                             auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
+                            auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
+                            auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
+                            auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
+                            auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
                             auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
+                            auto tmp4 = at::vec::Vectorized<float>(tmp3);
+                            auto tmp5 = tmp2 - tmp4;
+                            auto tmp7 = static_cast<float>(768.0);
+                            auto tmp8 = tmp6 / tmp7;
+                            auto tmp9 = static_cast<float>(1e-12);
+                            auto tmp10 = float(tmp8 + tmp9);
+                            auto tmp11 = 1 / std::sqrt(tmp10);
+                            auto tmp12 = at::vec::Vectorized<float>(tmp11);
+                            auto tmp13 = tmp5 * tmp12;
+                            auto tmp15 = tmp13 * tmp14;
+                            auto tmp17 = tmp15 + tmp16;
+                            tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
+                            tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
                         }
                     }
                 }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
             }
         }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
+        #pragma omp single
         {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
             {
+                for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
                 {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
                     {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
+                        if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
+                        {
+                            auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
+                            auto tmp1 = static_cast<float>(768.0);
+                            auto tmp2 = at::vec::Vectorized<float>(tmp1);
+                            auto tmp3 = tmp0 / tmp2;
+                            auto tmp4 = static_cast<float>(1e-12);
+                            auto tmp5 = at::vec::Vectorized<float>(tmp4);
+                            auto tmp6 = tmp3 + tmp5;
+                            auto tmp7 = tmp6.rsqrt();
+                            auto tmp8 = tmp7 / tmp2;
+                            tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
+                        }
                     }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
                 }
             }
         }
@@ -291,12 +308,12 @@ extern "C"  void  kernel(float* in_out_ptr0,
 ''')
 
 
-cpp_fused_gelu_view_2 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
+cpp_fused_gelu_view_2 = async_compile.cpp_pybinding(['const float*', 'float*'], r'''
 #include <torch/csrc/inductor/cpp_prefix.h>
 extern "C"  void  kernel(const float* in_ptr0,
                        float* out_ptr0)
 {
-    #pragma omp parallel num_threads(24)
+    #pragma omp parallel num_threads(8)
     {
         int tid = omp_get_thread_num();
         {
@@ -328,2737 +345,7 @@ extern "C"  void  kernel(const float* in_ptr0,
 ''')
 
 
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_3 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_4 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_5 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_6 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_7 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_8 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_9 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_10 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_11 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_12 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_13 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_14 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_15 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_16 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_17 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_18 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_19 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_20 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_21 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_22 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_23 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_24 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_25 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_26 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_27 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_28 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_29 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_30 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_31 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_32 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_33 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_34 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_gelu_view_35 = async_compile.cpp_pybinding(['const float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(const float* in_ptr0,
-                       float* out_ptr0)
-{
-    #pragma omp parallel num_threads(24)
-    {
-        int tid = omp_get_thread_num();
-        {
-            #pragma omp for
-            for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(24576L); x0+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(24576L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_ptr0 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                        auto tmp1 = static_cast<float>(0.5);
-                        auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                        auto tmp3 = tmp0 * tmp2;
-                        auto tmp4 = static_cast<float>(0.7071067811865476);
-                        auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                        auto tmp6 = tmp0 * tmp5;
-                        auto tmp7 = tmp6.erf();
-                        auto tmp8 = static_cast<float>(1.0);
-                        auto tmp9 = at::vec::Vectorized<float>(tmp8);
-                        auto tmp10 = tmp7 + tmp9;
-                        auto tmp11 = tmp3 * tmp10;
-                        tmp11.store(out_ptr0 + static_cast<int64_t>(x0));
-                    }
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_36 = async_compile.cpp_pybinding(['float*', 'const float*', 'const float*', 'const float*', 'float*', 'float*', 'float*', 'float*'], '''
-#include <torch/csrc/inductor/cpp_prefix.h>
-extern "C"  void  kernel(float* in_out_ptr0,
-                       const float* in_ptr1,
-                       const float* in_ptr2,
-                       const float* in_ptr3,
-                       float* out_ptr0,
-                       float* out_ptr1,
-                       float* out_ptr2,
-                       float* out_ptr3)
-{
-    auto in_ptr0 = in_out_ptr0;
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            {
-                Welford<float> tmp_acc0 = Welford<float>();
-                Welford<at::vec::Vectorized<float>> tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                Welford<at::vec::Vectorized<float>> masked_tmp_acc0_vec = Welford<at::vec::Vectorized<float>>();
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> welford_helper0(static_cast<int64_t>(96L));
-                static WelfordHelper<at::vec::Vectorized<float>, 4096> masked_welford_helper0(static_cast<int64_t>(0L));
-                for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-                {
-                    {
-                        if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                        {
-                            auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                            auto tmp2 = tmp0 + tmp1;
-                            tmp_acc0_vec = welford_combine(tmp_acc0_vec, tmp2, &welford_helper0);
-                        }
-                    }
-                }
-                tmp_acc0_vec = welford_combine(tmp_acc0_vec, &welford_helper0);
-                masked_tmp_acc0_vec = welford_combine(masked_tmp_acc0_vec, &masked_welford_helper0);
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(masked_tmp_acc0_vec));
-                tmp_acc0 = welford_combine(tmp_acc0, welford_vec_reduce_all(tmp_acc0_vec));
-                out_ptr0[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.mean);
-                out_ptr1[static_cast<int64_t>(x0)] = static_cast<float>(tmp_acc0.m2);
-            }
-        }
-    }
-    {
-        #pragma GCC ivdep
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(1L))
-        {
-            for(int64_t x1=static_cast<int64_t>(0L); x1<static_cast<int64_t>(768L); x1+=static_cast<int64_t>(8L))
-            {
-                {
-                    if(C10_LIKELY(x1 >= static_cast<int64_t>(0) && x1 < static_cast<int64_t>(768L)))
-                    {
-                        auto tmp0 = at::vec::Vectorized<float>::loadu(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp1 = at::vec::Vectorized<float>::loadu(in_ptr1 + static_cast<int64_t>(x1 + 768L*x0), static_cast<int64_t>(8));
-                        auto tmp3 = out_ptr0[static_cast<int64_t>(x0)];
-                        auto tmp6 = out_ptr1[static_cast<int64_t>(x0)];
-                        auto tmp14 = at::vec::Vectorized<float>::loadu(in_ptr2 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp16 = at::vec::Vectorized<float>::loadu(in_ptr3 + static_cast<int64_t>(x1), static_cast<int64_t>(8));
-                        auto tmp2 = tmp0 + tmp1;
-                        auto tmp4 = at::vec::Vectorized<float>(tmp3);
-                        auto tmp5 = tmp2 - tmp4;
-                        auto tmp7 = static_cast<float>(768.0);
-                        auto tmp8 = tmp6 / tmp7;
-                        auto tmp9 = static_cast<float>(1e-12);
-                        auto tmp10 = float(tmp8 + tmp9);
-                        auto tmp11 = 1 / std::sqrt(tmp10);
-                        auto tmp12 = at::vec::Vectorized<float>(tmp11);
-                        auto tmp13 = tmp5 * tmp12;
-                        auto tmp15 = tmp13 * tmp14;
-                        auto tmp17 = tmp15 + tmp16;
-                        tmp13.store(in_out_ptr0 + static_cast<int64_t>(x1 + 768L*x0));
-                        tmp17.store(out_ptr2 + static_cast<int64_t>(x1 + 768L*x0));
-                    }
-                }
-            }
-        }
-    }
-    {
-        for(int64_t x0=static_cast<int64_t>(0L); x0<static_cast<int64_t>(8L); x0+=static_cast<int64_t>(8L))
-        {
-            {
-                if(C10_LIKELY(x0 >= static_cast<int64_t>(0) && x0 < static_cast<int64_t>(8L)))
-                {
-                    auto tmp0 = at::vec::Vectorized<float>::loadu(out_ptr1 + static_cast<int64_t>(x0), static_cast<int64_t>(8));
-                    auto tmp1 = static_cast<float>(768.0);
-                    auto tmp2 = at::vec::Vectorized<float>(tmp1);
-                    auto tmp3 = tmp0 / tmp2;
-                    auto tmp4 = static_cast<float>(1e-12);
-                    auto tmp5 = at::vec::Vectorized<float>(tmp4);
-                    auto tmp6 = tmp3 + tmp5;
-                    auto tmp7 = tmp6.rsqrt();
-                    auto tmp8 = tmp7 / tmp2;
-                    tmp8.store(out_ptr3 + static_cast<int64_t>(x0));
-                }
-            }
-        }
-    }
-}
-''')
-
-
-cpp_fused_tanh_37 = async_compile.cpp_pybinding(['float*'], '''
+cpp_fused_tanh_3 = async_compile.cpp_pybinding(['float*'], r'''
 #include <torch/csrc/inductor/cpp_prefix.h>
 extern "C"  void  kernel(float* in_out_ptr0)
 {
@@ -3358,7 +645,7 @@ class Runner:
         buf25 = reinterpret_tensor(buf21, (1, 8, 768), (6144, 768, 1), 0); del buf21  # reuse
         buf26 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf271 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_3(buf25, buf18, primals_24, primals_25, buf22, buf23, buf26, buf271)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf25, buf18, primals_24, primals_25, buf22, buf23, buf26, buf271)
         del primals_25
         buf27 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_7, linear_6], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3390,14 +677,14 @@ class Runner:
         buf37 = reinterpret_tensor(buf33, (1, 8, 768), (6144, 768, 1), 0); del buf33  # reuse
         buf38 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf270 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_4(buf37, buf26, primals_34, primals_35, buf34, buf35, buf38, buf270)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf37, buf26, primals_34, primals_35, buf34, buf35, buf38, buf270)
         del primals_35
         buf39 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_10, hidden_states_11], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_37, reinterpret_tensor(buf38, (8, 768), (768, 1), 0), reinterpret_tensor(primals_36, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf39)
         del primals_37
         buf40 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_5(buf39, buf40)
+        cpp_fused_gelu_view_2(buf39, buf40)
         buf41 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_11, hidden_states_12, hidden_states_13], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_39, reinterpret_tensor(buf40, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_38, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf41)
@@ -3407,7 +694,7 @@ class Runner:
         buf45 = reinterpret_tensor(buf41, (1, 8, 768), (6144, 768, 1), 0); del buf41  # reuse
         buf46 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf269 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_6(buf45, buf38, primals_40, primals_41, buf42, buf43, buf46, buf269)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf45, buf38, primals_40, primals_41, buf42, buf43, buf46, buf269)
         del primals_41
         buf47 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_15, linear_12], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3439,14 +726,14 @@ class Runner:
         buf57 = reinterpret_tensor(buf53, (1, 8, 768), (6144, 768, 1), 0); del buf53  # reuse
         buf58 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf268 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_7(buf57, buf46, primals_50, primals_51, buf54, buf55, buf58, buf268)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf57, buf46, primals_50, primals_51, buf54, buf55, buf58, buf268)
         del primals_51
         buf59 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_18, hidden_states_19], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_53, reinterpret_tensor(buf58, (8, 768), (768, 1), 0), reinterpret_tensor(primals_52, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf59)
         del primals_53
         buf60 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_8(buf59, buf60)
+        cpp_fused_gelu_view_2(buf59, buf60)
         buf61 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_19, hidden_states_20, hidden_states_21], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_55, reinterpret_tensor(buf60, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_54, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf61)
@@ -3456,7 +743,7 @@ class Runner:
         buf65 = reinterpret_tensor(buf61, (1, 8, 768), (6144, 768, 1), 0); del buf61  # reuse
         buf66 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf267 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_9(buf65, buf58, primals_56, primals_57, buf62, buf63, buf66, buf267)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf65, buf58, primals_56, primals_57, buf62, buf63, buf66, buf267)
         del primals_57
         buf67 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_23, linear_18], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3488,14 +775,14 @@ class Runner:
         buf77 = reinterpret_tensor(buf73, (1, 8, 768), (6144, 768, 1), 0); del buf73  # reuse
         buf78 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf266 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_10(buf77, buf66, primals_66, primals_67, buf74, buf75, buf78, buf266)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf77, buf66, primals_66, primals_67, buf74, buf75, buf78, buf266)
         del primals_67
         buf79 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_26, hidden_states_27], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_69, reinterpret_tensor(buf78, (8, 768), (768, 1), 0), reinterpret_tensor(primals_68, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf79)
         del primals_69
         buf80 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_11(buf79, buf80)
+        cpp_fused_gelu_view_2(buf79, buf80)
         buf81 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_27, hidden_states_28, hidden_states_29], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_71, reinterpret_tensor(buf80, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_70, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf81)
@@ -3505,7 +792,7 @@ class Runner:
         buf85 = reinterpret_tensor(buf81, (1, 8, 768), (6144, 768, 1), 0); del buf81  # reuse
         buf86 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf265 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_12(buf85, buf78, primals_72, primals_73, buf82, buf83, buf86, buf265)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf85, buf78, primals_72, primals_73, buf82, buf83, buf86, buf265)
         del primals_73
         buf87 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_31, linear_24], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3537,14 +824,14 @@ class Runner:
         buf97 = reinterpret_tensor(buf93, (1, 8, 768), (6144, 768, 1), 0); del buf93  # reuse
         buf98 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf264 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_13(buf97, buf86, primals_82, primals_83, buf94, buf95, buf98, buf264)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf97, buf86, primals_82, primals_83, buf94, buf95, buf98, buf264)
         del primals_83
         buf99 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_34, hidden_states_35], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_85, reinterpret_tensor(buf98, (8, 768), (768, 1), 0), reinterpret_tensor(primals_84, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf99)
         del primals_85
         buf100 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_14(buf99, buf100)
+        cpp_fused_gelu_view_2(buf99, buf100)
         buf101 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_35, hidden_states_36, hidden_states_37], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_87, reinterpret_tensor(buf100, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_86, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf101)
@@ -3554,7 +841,7 @@ class Runner:
         buf105 = reinterpret_tensor(buf101, (1, 8, 768), (6144, 768, 1), 0); del buf101  # reuse
         buf106 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf263 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_15(buf105, buf98, primals_88, primals_89, buf102, buf103, buf106, buf263)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf105, buf98, primals_88, primals_89, buf102, buf103, buf106, buf263)
         del primals_89
         buf107 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_39, linear_30], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3586,14 +873,14 @@ class Runner:
         buf117 = reinterpret_tensor(buf113, (1, 8, 768), (6144, 768, 1), 0); del buf113  # reuse
         buf118 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf262 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_16(buf117, buf106, primals_98, primals_99, buf114, buf115, buf118, buf262)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf117, buf106, primals_98, primals_99, buf114, buf115, buf118, buf262)
         del primals_99
         buf119 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_42, hidden_states_43], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_101, reinterpret_tensor(buf118, (8, 768), (768, 1), 0), reinterpret_tensor(primals_100, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf119)
         del primals_101
         buf120 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_17(buf119, buf120)
+        cpp_fused_gelu_view_2(buf119, buf120)
         buf121 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_43, hidden_states_44, hidden_states_45], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_103, reinterpret_tensor(buf120, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_102, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf121)
@@ -3603,7 +890,7 @@ class Runner:
         buf125 = reinterpret_tensor(buf121, (1, 8, 768), (6144, 768, 1), 0); del buf121  # reuse
         buf126 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf261 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_18(buf125, buf118, primals_104, primals_105, buf122, buf123, buf126, buf261)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf125, buf118, primals_104, primals_105, buf122, buf123, buf126, buf261)
         del primals_105
         buf127 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_47, linear_36], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3635,14 +922,14 @@ class Runner:
         buf137 = reinterpret_tensor(buf133, (1, 8, 768), (6144, 768, 1), 0); del buf133  # reuse
         buf138 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf260 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_19(buf137, buf126, primals_114, primals_115, buf134, buf135, buf138, buf260)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf137, buf126, primals_114, primals_115, buf134, buf135, buf138, buf260)
         del primals_115
         buf139 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_50, hidden_states_51], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_117, reinterpret_tensor(buf138, (8, 768), (768, 1), 0), reinterpret_tensor(primals_116, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf139)
         del primals_117
         buf140 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_20(buf139, buf140)
+        cpp_fused_gelu_view_2(buf139, buf140)
         buf141 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_51, hidden_states_52, hidden_states_53], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_119, reinterpret_tensor(buf140, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_118, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf141)
@@ -3652,7 +939,7 @@ class Runner:
         buf145 = reinterpret_tensor(buf141, (1, 8, 768), (6144, 768, 1), 0); del buf141  # reuse
         buf146 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf259 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_21(buf145, buf138, primals_120, primals_121, buf142, buf143, buf146, buf259)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf145, buf138, primals_120, primals_121, buf142, buf143, buf146, buf259)
         del primals_121
         buf147 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_55, linear_42], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3684,14 +971,14 @@ class Runner:
         buf157 = reinterpret_tensor(buf153, (1, 8, 768), (6144, 768, 1), 0); del buf153  # reuse
         buf158 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf258 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_22(buf157, buf146, primals_130, primals_131, buf154, buf155, buf158, buf258)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf157, buf146, primals_130, primals_131, buf154, buf155, buf158, buf258)
         del primals_131
         buf159 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_58, hidden_states_59], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_133, reinterpret_tensor(buf158, (8, 768), (768, 1), 0), reinterpret_tensor(primals_132, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf159)
         del primals_133
         buf160 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_23(buf159, buf160)
+        cpp_fused_gelu_view_2(buf159, buf160)
         buf161 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_59, hidden_states_60, hidden_states_61], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_135, reinterpret_tensor(buf160, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_134, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf161)
@@ -3701,7 +988,7 @@ class Runner:
         buf165 = reinterpret_tensor(buf161, (1, 8, 768), (6144, 768, 1), 0); del buf161  # reuse
         buf166 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf257 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_24(buf165, buf158, primals_136, primals_137, buf162, buf163, buf166, buf257)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf165, buf158, primals_136, primals_137, buf162, buf163, buf166, buf257)
         del primals_137
         buf167 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_63, linear_48], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3733,14 +1020,14 @@ class Runner:
         buf177 = reinterpret_tensor(buf173, (1, 8, 768), (6144, 768, 1), 0); del buf173  # reuse
         buf178 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf256 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_25(buf177, buf166, primals_146, primals_147, buf174, buf175, buf178, buf256)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf177, buf166, primals_146, primals_147, buf174, buf175, buf178, buf256)
         del primals_147
         buf179 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_66, hidden_states_67], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_149, reinterpret_tensor(buf178, (8, 768), (768, 1), 0), reinterpret_tensor(primals_148, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf179)
         del primals_149
         buf180 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_26(buf179, buf180)
+        cpp_fused_gelu_view_2(buf179, buf180)
         buf181 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_67, hidden_states_68, hidden_states_69], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_151, reinterpret_tensor(buf180, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_150, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf181)
@@ -3750,7 +1037,7 @@ class Runner:
         buf185 = reinterpret_tensor(buf181, (1, 8, 768), (6144, 768, 1), 0); del buf181  # reuse
         buf186 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf255 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_27(buf185, buf178, primals_152, primals_153, buf182, buf183, buf186, buf255)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf185, buf178, primals_152, primals_153, buf182, buf183, buf186, buf255)
         del primals_153
         buf187 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_71, linear_54], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3782,14 +1069,14 @@ class Runner:
         buf197 = reinterpret_tensor(buf193, (1, 8, 768), (6144, 768, 1), 0); del buf193  # reuse
         buf198 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf254 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_28(buf197, buf186, primals_162, primals_163, buf194, buf195, buf198, buf254)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf197, buf186, primals_162, primals_163, buf194, buf195, buf198, buf254)
         del primals_163
         buf199 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_74, hidden_states_75], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_165, reinterpret_tensor(buf198, (8, 768), (768, 1), 0), reinterpret_tensor(primals_164, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf199)
         del primals_165
         buf200 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_29(buf199, buf200)
+        cpp_fused_gelu_view_2(buf199, buf200)
         buf201 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_75, hidden_states_76, hidden_states_77], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_167, reinterpret_tensor(buf200, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_166, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf201)
@@ -3799,7 +1086,7 @@ class Runner:
         buf205 = reinterpret_tensor(buf201, (1, 8, 768), (6144, 768, 1), 0); del buf201  # reuse
         buf206 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf253 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_30(buf205, buf198, primals_168, primals_169, buf202, buf203, buf206, buf253)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf205, buf198, primals_168, primals_169, buf202, buf203, buf206, buf253)
         del primals_169
         buf207 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_79, linear_60], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3831,14 +1118,14 @@ class Runner:
         buf217 = reinterpret_tensor(buf213, (1, 8, 768), (6144, 768, 1), 0); del buf213  # reuse
         buf218 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf252 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_31(buf217, buf206, primals_178, primals_179, buf214, buf215, buf218, buf252)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf217, buf206, primals_178, primals_179, buf214, buf215, buf218, buf252)
         del primals_179
         buf219 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_82, hidden_states_83], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_181, reinterpret_tensor(buf218, (8, 768), (768, 1), 0), reinterpret_tensor(primals_180, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf219)
         del primals_181
         buf220 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_32(buf219, buf220)
+        cpp_fused_gelu_view_2(buf219, buf220)
         buf221 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_83, hidden_states_84, hidden_states_85], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_183, reinterpret_tensor(buf220, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_182, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf221)
@@ -3848,7 +1135,7 @@ class Runner:
         buf225 = reinterpret_tensor(buf221, (1, 8, 768), (6144, 768, 1), 0); del buf221  # reuse
         buf226 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf251 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_33(buf225, buf218, primals_184, primals_185, buf222, buf223, buf226, buf251)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf225, buf218, primals_184, primals_185, buf222, buf223, buf226, buf251)
         del primals_185
         buf227 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_87, linear_66], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
@@ -3880,14 +1167,14 @@ class Runner:
         buf237 = reinterpret_tensor(buf233, (1, 8, 768), (6144, 768, 1), 0); del buf233  # reuse
         buf238 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf250 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_34(buf237, buf226, primals_194, primals_195, buf234, buf235, buf238, buf250)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf237, buf226, primals_194, primals_195, buf234, buf235, buf238, buf250)
         del primals_195
         buf239 = empty_strided_cpu((8, 3072), (3072, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_90, hidden_states_91], Original ATen: [aten.native_layer_norm, aten.view, aten.t, aten.addmm]
         extern_kernels.addmm(primals_197, reinterpret_tensor(buf238, (8, 768), (768, 1), 0), reinterpret_tensor(primals_196, (768, 3072), (1, 768), 0), alpha=1, beta=1, out=buf239)
         del primals_197
         buf240 = empty_strided_cpu((1, 8, 3072), (24576, 3072, 1), torch.float32)
-        cpp_fused_gelu_view_35(buf239, buf240)
+        cpp_fused_gelu_view_2(buf239, buf240)
         buf241 = empty_strided_cpu((8, 768), (768, 1), torch.float32)
         # Topologically Sorted Source Nodes: [hidden_states_91, hidden_states_92, hidden_states_93], Original ATen: [aten.view, aten.gelu, aten.t, aten.addmm]
         extern_kernels.addmm(primals_199, reinterpret_tensor(buf240, (8, 3072), (3072, 1), 0), reinterpret_tensor(primals_198, (3072, 768), (1, 3072), 0), alpha=1, beta=1, out=buf241)
@@ -3897,7 +1184,7 @@ class Runner:
         buf245 = reinterpret_tensor(buf241, (1, 8, 768), (6144, 768, 1), 0); del buf241  # reuse
         buf246 = empty_strided_cpu((1, 8, 768), (6144, 768, 1), torch.float32)
         buf249 = empty_strided_cpu((1, 8, 1), (8, 1, 1), torch.float32)
-        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_36(buf245, buf238, primals_200, primals_201, buf242, buf243, buf246, buf249)
+        cpp_fused_add_native_layer_norm_native_layer_norm_backward_view_1(buf245, buf238, primals_200, primals_201, buf242, buf243, buf246, buf249)
         del buf242
         del buf243
         del primals_201
@@ -3906,7 +1193,7 @@ class Runner:
         extern_kernels.addmm(primals_203, reinterpret_tensor(buf246, (1, 768), (768, 1), 0), reinterpret_tensor(primals_202, (768, 768), (1, 768), 0), alpha=1, beta=1, out=buf247)
         del primals_203
         buf248 = buf247; del buf247  # reuse
-        cpp_fused_tanh_37(buf248)
+        cpp_fused_tanh_3(buf248)
         return (buf246, buf248, primals_1, primals_2, primals_3, primals_7, primals_10, primals_12, primals_14, primals_16, primals_18, primals_20, primals_22, primals_24, primals_26, primals_28, primals_30, primals_32, primals_34, primals_36, primals_38, primals_40, primals_42, primals_44, primals_46, primals_48, primals_50, primals_52, primals_54, primals_56, primals_58, primals_60, primals_62, primals_64, primals_66, primals_68, primals_70, primals_72, primals_74, primals_76, primals_78, primals_80, primals_82, primals_84, primals_86, primals_88, primals_90, primals_92, primals_94, primals_96, primals_98, primals_100, primals_102, primals_104, primals_106, primals_108, primals_110, primals_112, primals_114, primals_116, primals_118, primals_120, primals_122, primals_124, primals_126, primals_128, primals_130, primals_132, primals_134, primals_136, primals_138, primals_140, primals_142, primals_144, primals_146, primals_148, primals_150, primals_152, primals_154, primals_156, primals_158, primals_160, primals_162, primals_164, primals_166, primals_168, primals_170, primals_172, primals_174, primals_176, primals_178, primals_180, primals_182, primals_184, primals_186, primals_188, primals_190, primals_192, primals_194, primals_196, primals_198, primals_200, primals_202, buf4, buf5, reinterpret_tensor(buf6, (8, 768), (768, 1), 0), reinterpret_tensor(buf7, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf8, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf9, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf11, buf12, buf17, reinterpret_tensor(buf18, (8, 768), (768, 1), 0), buf19, reinterpret_tensor(buf20, (8, 3072), (3072, 1), 0), buf25, reinterpret_tensor(buf26, (8, 768), (768, 1), 0), reinterpret_tensor(buf27, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf28, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf29, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf31, buf32, buf37, reinterpret_tensor(buf38, (8, 768), (768, 1), 0), buf39, reinterpret_tensor(buf40, (8, 3072), (3072, 1), 0), buf45, reinterpret_tensor(buf46, (8, 768), (768, 1), 0), reinterpret_tensor(buf47, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf48, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf49, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf51, buf52, buf57, reinterpret_tensor(buf58, (8, 768), (768, 1), 0), buf59, reinterpret_tensor(buf60, (8, 3072), (3072, 1), 0), buf65, reinterpret_tensor(buf66, (8, 768), (768, 1), 0), reinterpret_tensor(buf67, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf68, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf69, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf71, buf72, buf77, reinterpret_tensor(buf78, (8, 768), (768, 1), 0), buf79, reinterpret_tensor(buf80, (8, 3072), (3072, 1), 0), buf85, reinterpret_tensor(buf86, (8, 768), (768, 1), 0), reinterpret_tensor(buf87, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf88, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf89, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf91, buf92, buf97, reinterpret_tensor(buf98, (8, 768), (768, 1), 0), buf99, reinterpret_tensor(buf100, (8, 3072), (3072, 1), 0), buf105, reinterpret_tensor(buf106, (8, 768), (768, 1), 0), reinterpret_tensor(buf107, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf108, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf109, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf111, buf112, buf117, reinterpret_tensor(buf118, (8, 768), (768, 1), 0), buf119, reinterpret_tensor(buf120, (8, 3072), (3072, 1), 0), buf125, reinterpret_tensor(buf126, (8, 768), (768, 1), 0), reinterpret_tensor(buf127, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf128, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf129, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf131, buf132, buf137, reinterpret_tensor(buf138, (8, 768), (768, 1), 0), buf139, reinterpret_tensor(buf140, (8, 3072), (3072, 1), 0), buf145, reinterpret_tensor(buf146, (8, 768), (768, 1), 0), reinterpret_tensor(buf147, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf148, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf149, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf151, buf152, buf157, reinterpret_tensor(buf158, (8, 768), (768, 1), 0), buf159, reinterpret_tensor(buf160, (8, 3072), (3072, 1), 0), buf165, reinterpret_tensor(buf166, (8, 768), (768, 1), 0), reinterpret_tensor(buf167, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf168, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf169, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf171, buf172, buf177, reinterpret_tensor(buf178, (8, 768), (768, 1), 0), buf179, reinterpret_tensor(buf180, (8, 3072), (3072, 1), 0), buf185, reinterpret_tensor(buf186, (8, 768), (768, 1), 0), reinterpret_tensor(buf187, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf188, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf189, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf191, buf192, buf197, reinterpret_tensor(buf198, (8, 768), (768, 1), 0), buf199, reinterpret_tensor(buf200, (8, 3072), (3072, 1), 0), buf205, reinterpret_tensor(buf206, (8, 768), (768, 1), 0), reinterpret_tensor(buf207, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf208, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf209, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf211, buf212, buf217, reinterpret_tensor(buf218, (8, 768), (768, 1), 0), buf219, reinterpret_tensor(buf220, (8, 3072), (3072, 1), 0), buf225, reinterpret_tensor(buf226, (8, 768), (768, 1), 0), reinterpret_tensor(buf227, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf228, (1, 12, 8, 64), (6144, 64, 768, 1), 0), reinterpret_tensor(buf229, (1, 12, 8, 64), (6144, 64, 768, 1), 0), buf231, buf232, buf237, reinterpret_tensor(buf238, (8, 768), (768, 1), 0), buf239, reinterpret_tensor(buf240, (8, 3072), (3072, 1), 0), buf245, reinterpret_tensor(buf246, (1, 768), (6144, 1), 0), buf248, buf249, buf250, buf251, buf252, buf253, buf254, buf255, buf256, buf257, buf258, buf259, buf260, buf261, buf262, buf263, buf264, buf265, buf266, buf267, buf268, buf269, buf270, buf271, buf272, buf273, )
 
 runner = Runner(partitions=[])

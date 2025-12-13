@@ -1,0 +1,8 @@
+op0, op1: (2, True, 49152, -1)
+op5, op6: (2, True, 49152, -1)
+op0, op4: (2, False, 49176, -3)
+op5, op9: (2, False, 49176, -3)
+op4, op5: (2, False, 49152, -1)
+op4, op6: (2, False, 49152, -2)
+op1, op3: (2, False, 24, -1)
+op6, op8: (2, False, 24, -1)

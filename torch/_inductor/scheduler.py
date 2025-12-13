@@ -15,13 +15,13 @@ import textwrap
 import traceback
 import typing
 from collections import Counter, defaultdict
-from typing import Any, Generic, Optional, TYPE_CHECKING, TypeAlias, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeAlias, TypeVar, Union
+
 from typing_extensions import ParamSpec
 
 from torch.utils._ordered_set import OrderedSet
 
 from .ir import ComputedBuffer
-
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, Sequence
@@ -37,12 +37,12 @@ from torch._inductor.codecache import LambdaFuture, PyCodeCache
 from torch._inductor.ir import TritonTemplateCallerBase
 from torch._inductor.metrics import get_metric_table, is_metric_table_enabled
 from torch.fx.experimental.symbolic_shapes import free_symbols
-from torch.utils._sympy.symbol import free_symbol_is_type, symbol_is_type, SymT
+from torch.utils._sympy.symbol import SymT, free_symbol_is_type, symbol_is_type
 from torch.utils._triton import has_triton
 
 from . import comms, config, config_comms, dependencies, ir, metrics
 from .analyze_preserves_zero_mask import can_codegen_without_upcasts
-from .codegen.common import BackendFeature, get_scheduling_for_device, Kernel
+from .codegen.common import BackendFeature, Kernel, get_scheduling_for_device
 from .comm_analysis import (
     estimate_nccl_collective_runtime,
     estimate_nccl_collective_runtime_nccl_estimator,
@@ -51,12 +51,12 @@ from .dependencies import Dep, MemoryDep, StarDep, WeakDep
 from .exc import GPUTooOldForTriton, TritonMissing
 from .fx_utils import count_flops_fx
 from .ir import (
-    assign_origin_node,
-    get_device_type,
     GraphPartitionSignature,
     MultiOutput,
     MultiOutputLayout,
     NoneLayout,
+    assign_origin_node,
+    get_device_type,
 )
 from .loop_body import LoopBody
 from .memory import MemoryPlanningInfoForBuffer, MemoryPlanningInfoForNode
@@ -64,6 +64,8 @@ from .runtime.hints import ReductionHint
 from .runtime.runtime_utils import green_text, red_text
 from .sizevars import SimplifyIndexing
 from .utils import (
+    GraphPartitionMap,
+    IndentedBuffer,
     _unstable_customized_partition_wrapper,
     cache_on_self,
     cmp,
@@ -72,8 +74,6 @@ from .utils import (
     get_device_tflops,
     get_dtype_size,
     get_gpu_dram_gbps,
-    GraphPartitionMap,
-    IndentedBuffer,
     is_collective,
     is_cudagraph_unsafe_op,
     is_gpu,
@@ -84,7 +84,6 @@ from .utils import (
     sympy_product,
 )
 from .virtualized import V
-
 
 log = logging.getLogger(__name__)
 fusion_log = torch._logging.getArtifactLogger(__name__, "fusion")
@@ -1585,6 +1584,9 @@ class SchedulerNode(BaseSchedulerNode):
             f"{name}.group.iteration = {self.group[1]}",
             f"{name}.sizes = {self._sizes}",
         ]
+
+        # lines.insert(0, f"TEST: This is a regular node: {name}")
+
         for dep in self.read_writes.reads_and_writes():
             if not isinstance(dep, WeakDep):
                 buf_name = dep.name
@@ -1924,6 +1926,11 @@ class FusedSchedulerNode(BaseSchedulerNode):
             f"{self.get_name()}.snodes[{i}] =\n{node.debug_str()}"
             for i, node in enumerate(self.snodes)
         ]
+
+        # lines.insert(
+        #     0, f"TEST: This is a fused node with {len(self.snodes)} sub-nodes."
+        # )
+
         node = self.snodes[0].node
         if node is not None:
             lines.extend(self._debug_str_for_device())
@@ -2661,6 +2668,7 @@ class Scheduler:
         from torch._inductor.debug import log_ir_post_fusion, log_ir_pre_fusion
 
         log_ir_pre_fusion(self.nodes)
+
         self.num_orig_nodes = len(self.nodes)
         self.create_foreach_nodes()
         self.nodes = self.topological_sort_schedule(self.nodes)
@@ -3113,9 +3121,9 @@ class Scheduler:
 
     def insert_memory_check_nodes(self) -> None:
         from .memory import (
+            FreeableInputBuffer,
             assign_memory_planning_info_for_scheduler_buffers,
             compute_memory_timeline,
-            FreeableInputBuffer,
             get_freeable_input_buf,
         )
 
@@ -4098,6 +4106,41 @@ class Scheduler:
             possible_fusions
         )
         possible_fusions.sort(key=self.score_fusion_key, reverse=True)
+
+        def write_ir_file_and_scores(nodes, possible_fusions, file_id=None):
+            output_dir = os.environ.get("MY_TORCH_MODEL_OUTPUT_DIR") or ""
+
+            if file_id is None:
+                import time
+
+                file_id = time.time()
+
+            with open(
+                os.path.join(output_dir, f"my_ir_test_file_{file_id}.txt"), "w"
+            ) as f:
+                import io
+
+                buf = io.StringIO()
+                for node in nodes:
+                    buf.write(f"\n# {'=' * 40}{node.get_name()} START{'=' * 40} #\n")
+                    buf.write(node.debug_str())
+                    buf.write(f"\n# {'=' * 40}{node.get_name()} END{'=' * 40} #\n")
+                    buf.write("\n\n\n")
+                out = buf.getvalue()
+                f.write(out)
+
+            with open(
+                os.path.join(output_dir, f"my_score_fusions_test_file_{file_id}.txt"),
+                "w",
+            ) as f:
+                for item in possible_fusions:
+                    f.write(
+                        f"{item[0].get_name()}, {item[1].get_name()}: {self.score_fusion_key(item)}\n"
+                    )
+
+        if len(possible_fusions):
+            write_ir_file_and_scores(nodes, possible_fusions)
+
         fusion_log.debug("found %d possible fusions", len(possible_fusions))
         return possible_fusions
 

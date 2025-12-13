@@ -1,0 +1,147 @@
+
+# ========================================op0 START======================================== #
+op0: SchedulerNode(ComputedBuffer)
+op0.writes = [MemoryDep('buf0', 1024*d0 + d1, {d0: 1024, d1: 1024})]
+op0.unmet_dependencies = []
+op0.met_dependencies = [MemoryDep('arg1_1', d1, {d0: 1024, d1: 1024})]
+op0.outputs = [
+    buf0: ComputedBuffer
+    buf0.layout = FixedLayout('cuda:0', torch.float32, size=[1, 1, 1024, 1024], stride=[1048576, 1, 1024, 1])
+    buf0.users = [
+        NodeUser(node=SchedulerNode(name='op1'), can_inplace=True, is_weak=False),
+        NodeUser(node=SchedulerNode(name='op3'), can_inplace=True, is_weak=False),
+        NodeUser(node=OUTPUT, can_inplace=False, is_weak=False),
+    ]
+]
+op0.group.device = cuda:0
+op0.group.iteration = (1048576, 1)
+op0.sizes = ([1024, 1024], [])
+arg1_1_layout = FixedLayout('cuda:0', torch.int64, size=[1, 1024], stride=[1024, 1])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[1, 1, 1024, 1024], stride=[1048576, 1, 1024, 1])
+class op0_loop_body:
+    var_ranges = {p0: 1024, p1: 1024}
+    index0 = p1
+    index1 = 1024*p0 + p1
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('arg1_1', get_index)
+        to_dtype = ops.to_dtype(load, torch.float32, src_dtype = torch.int64)
+        constant = ops.constant(1.0, torch.float32)
+        sub = ops.sub(constant, to_dtype)
+        to_dtype_1 = ops.to_dtype(sub, torch.bool, src_dtype = torch.float32)
+        get_index_1 = self.get_index('index0')
+        load_1 = ops.load('arg1_1', get_index_1)
+        to_dtype_2 = ops.to_dtype(load_1, torch.float32, src_dtype = torch.int64)
+        constant_1 = ops.constant(1.0, torch.float32)
+        sub_1 = ops.sub(constant_1, to_dtype_2)
+        constant_2 = ops.constant(-3.4028234663852886e+38, torch.float32)
+        where = ops.where(to_dtype_1, constant_2, sub_1)
+        get_index_2 = self.get_index('index0')
+        load_2 = ops.load('arg1_1', get_index_2)
+        to_dtype_3 = ops.to_dtype(load_2, torch.float32, src_dtype = torch.int64)
+        constant_3 = ops.constant(1.0, torch.float32)
+        sub_2 = ops.sub(constant_3, to_dtype_3)
+        mul = ops.mul(where, sub_2)
+        get_index_3 = self.get_index('index1')
+        store = ops.store('buf0', get_index_3, mul, None)
+        return store
+# ========================================op0 END======================================== #
+
+
+
+
+# ========================================op1 START======================================== #
+op1: SchedulerNode(ComputedBuffer)
+op1.writes = [MemoryDep('buf1', d0, {d0: 1024})]
+op1.unmet_dependencies = [MemoryDep('buf0', d0, {d0: 1024})]
+op1.met_dependencies = []
+op1.outputs = [
+    buf1: ComputedBuffer
+    buf1.layout = FixedLayout('cuda:0', torch.bool, size=[1, 1024], stride=[1024, 1])
+    buf1.users = [
+        NodeUser(node=SchedulerNode(name='op2'), can_inplace=False, is_weak=False),
+        NodeUser(node=OUTPUT, can_inplace=False, is_weak=False),
+    ]
+]
+op1.group.device = cuda:0
+op1.group.iteration = (1024, 1)
+op1.sizes = ([1024], [])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[1, 1, 1024, 1024], stride=[1048576, 1, 1024, 1])
+buf1_layout = FixedLayout('cuda:0', torch.bool, size=[1, 1024], stride=[1024, 1])
+class op1_loop_body:
+    var_ranges = {p0: 1024}
+    index0 = p0
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('buf0', get_index)
+        constant = ops.constant(0.0, torch.float32)
+        gt = ops.gt(load, constant)
+        get_index_1 = self.get_index('index0')
+        store = ops.store('buf1', get_index_1, gt, None)
+        return store
+# ========================================op1 END======================================== #
+
+
+
+
+# ========================================op2 START======================================== #
+op2: SchedulerNode(ComputedBuffer)
+op2.writes = [MemoryDep('buf2', 0, {})]
+op2.unmet_dependencies = [MemoryDep('buf1', d0, {d0: 1024})]
+op2.met_dependencies = []
+op2.outputs = [
+    buf2: ComputedBuffer
+    buf2.layout = FixedLayout('cuda:0', torch.bool, size=[], stride=[])
+    buf2.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op2.group.device = cuda:0
+op2.group.iteration = (1, 1024)
+op2.sizes = ([], [1024])
+buf1_layout = FixedLayout('cuda:0', torch.bool, size=[1, 1024], stride=[1024, 1])
+buf2_layout = FixedLayout('cuda:0', torch.bool, size=[], stride=[])
+class op2_loop_body:
+    var_ranges = {p0: 1024}
+    index0 = p0
+    index1 = 0
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('buf1', get_index)
+        reduction = ops.reduction(torch.bool, torch.bool, 'any', load)
+        get_index_1 = self.get_index('index1')
+        store_reduction = ops.store_reduction('buf2', get_index_1, reduction)
+        return None
+# ========================================op2 END======================================== #
+
+
+
+
+# ========================================op3 START======================================== #
+op3: SchedulerNode(ComputedBuffer)
+op3.writes = [MemoryDep('buf3', d0, {d0: 1024})]
+op3.unmet_dependencies = [MemoryDep('buf0', d0, {d0: 1024})]
+op3.met_dependencies = []
+op3.outputs = [
+    buf3: ComputedBuffer
+    buf3.layout = FixedLayout('cuda:0', torch.bool, size=[1, 1024], stride=[1024, 1])
+    buf3.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op3.group.device = cuda:0
+op3.group.iteration = (1024, 1)
+op3.sizes = ([1024], [])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[1, 1, 1024, 1024], stride=[1048576, 1, 1024, 1])
+buf3_layout = FixedLayout('cuda:0', torch.bool, size=[1, 1024], stride=[1024, 1])
+class op3_loop_body:
+    var_ranges = {p0: 1024}
+    index0 = p0
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('buf0', get_index)
+        constant = ops.constant(0.0, torch.float32)
+        lt = ops.lt(load, constant)
+        get_index_1 = self.get_index('index0')
+        store = ops.store('buf3', get_index_1, lt, None)
+        return store
+# ========================================op3 END======================================== #
+
+
+

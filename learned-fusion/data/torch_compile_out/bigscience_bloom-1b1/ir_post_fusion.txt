@@ -1,0 +1,72 @@
+
+# ========================================op0 START======================================== #
+op0: SchedulerNode(ComputedBuffer)
+op0.writes = [MemoryDep('buf0', 0, {})]
+op0.unmet_dependencies = []
+op0.met_dependencies = [MemoryDep('arg1_1', 0, {})]
+op0.outputs = [
+    buf0: ComputedBuffer
+    buf0.layout = FixedLayout('cuda:0', torch.float32, size=[], stride=[])
+    buf0.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op0.group.device = cuda:0
+op0.group.iteration = (1, 1)
+op0.sizes = ((), ())
+arg1_1_layout = FixedLayout('cuda:0', torch.float32, size=[s11], stride=[1])
+buf0_layout = FixedLayout('cuda:0', torch.float32, size=[], stride=[])
+class op0_loop_body:
+    var_ranges = {}
+    index0 = 0
+    index1 = s11*s66*s78
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('arg1_1', get_index)
+        get_index_1 = self.get_index('index0')
+        load_1 = ops.load('arg1_1', get_index_1)
+        sub = ops.sub(load, load_1)
+        get_index_2 = self.get_index('index1')
+        index_expr = ops.index_expr(get_index_2, torch.float32)
+        add = ops.add(sub, index_expr)
+        get_index_3 = self.get_index('index0')
+        store = ops.store('buf0', get_index_3, add, None)
+        return store
+# ========================================op0 END======================================== #
+
+
+
+
+# ========================================op1 START======================================== #
+op1: SchedulerNode(ComputedBuffer)
+op1.writes = [MemoryDep('buf1', 0, {})]
+op1.unmet_dependencies = []
+op1.met_dependencies = [MemoryDep('arg1_1', 0, {}), MemoryDep('arg1_1', s11 - 1, {})]
+op1.outputs = [
+    buf1: ComputedBuffer
+    buf1.layout = FixedLayout('cuda:0', torch.float32, size=[], stride=[])
+    buf1.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op1.group.device = cuda:0
+op1.group.iteration = (1, 1)
+op1.sizes = ((), ())
+arg1_1_layout = FixedLayout('cuda:0', torch.float32, size=[s11], stride=[1])
+arg1_1_layout = FixedLayout('cuda:0', torch.float32, size=[s11], stride=[1])
+buf1_layout = FixedLayout('cuda:0', torch.float32, size=[], stride=[])
+class op1_loop_body:
+    var_ranges = {}
+    index0 = 0
+    index1 = s11 - 1
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        load = ops.load('arg1_1', get_index)
+        get_index_1 = self.get_index('index1')
+        load_1 = ops.load('arg1_1', get_index_1)
+        sub = ops.sub(load, load_1)
+        constant = ops.constant(1.0, torch.float32)
+        sub_1 = ops.sub(sub, constant)
+        get_index_2 = self.get_index('index0')
+        store = ops.store('buf1', get_index_2, sub_1, None)
+        return store
+# ========================================op1 END======================================== #
+
+
+
