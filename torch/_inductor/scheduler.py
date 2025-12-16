@@ -4138,6 +4138,19 @@ class Scheduler:
                         f"{item[0].get_name()}, {item[1].get_name()}: {self.score_fusion_key(item)}\n"
                     )
 
+            if os.environ.get("MY_TORCH_DO_BENCHMARKS"):
+                with open(
+                    os.path.join(
+                        output_dir, f"my_score_fusions_test_file_{file_id}.txt"
+                    ),
+                    "w",
+                ) as f:
+                    for item in possible_fusions:
+                        fused_time, unfused_time = self.benchmark_kernel_get_times(item)
+                        f.write(
+                            f"{item[0].get_name()}, {item[1].get_name()}: ({fused_time}, {unfused_time})\n"
+                        )
+
         if len(possible_fusions):
             write_ir_file_and_scores(nodes, possible_fusions)
 
@@ -6219,6 +6232,83 @@ class Scheduler:
                 )
         # ms1 returned by benchmark_fused_nodes discounted clone time
         return ms2 - ms2_clone < ms1 or small_kernel
+
+    # TODO: sameer-n012: my benchmark function
+    # same as above but returns times instead of bool
+    # always runs regardless of config.benchmark_combo_kernel
+    def benchmark_kernel_get_times(
+        self, nodes: list[BaseSchedulerNode]
+    ) -> tuple[float, float]:
+        """
+        Return tuple(float, float) of (fused_time, unfused_time) in ms
+        """
+
+        subkernel_nodes = nodes
+        device = subkernel_nodes[0].get_device()
+
+        # don't support benchmark fusion for CPU C++ backend right now.
+        if device is None or (device.type == "cpu" and config.cpu_backend != "triton"):
+            return None
+
+        from triton.compiler.errors import CompilationError
+
+        ms1, path1_list = 0.0, []
+        for i, snode in enumerate(subkernel_nodes):
+            node_list = snode.get_nodes()
+            # We can not accurately benchmark kernel using atomic_add
+            # due to how we generate random integer inputs.
+            if self._any_atomic_add(node_list):
+                fusion_log.debug(
+                    "ComboKernel: benchmarking may not accurate due to atomic_add"
+                )
+
+            try:
+                ms, path = self.benchmark_fused_nodes(node_list)
+                if math.isinf(ms):
+                    fusion_log.debug(
+                        "ComboKernel benchmark: register spilling of %d-th subkernel",
+                        i,
+                    )
+                    return None
+            except CompilationError as e:
+                # workaround triton issue: https://github.com/triton-lang/triton/issues/2151
+                if "Loop-carried variable" in str(e):
+                    fusion_log.debug(
+                        "ComboKernel benchmark: return True because of loop-carried variable"
+                    )
+                    return None  # allow fusion
+                else:
+                    raise
+            ms1 += ms
+            path1_list.append(path)
+
+        try:
+            ms2, ms2_clone, _path2_list = self.benchmark_combo_kernel(subkernel_nodes)
+        except CompilationError as e:
+            # workaround triton issue: https://github.com/triton-lang/triton/issues/2151
+            if "Loop-carried variable" in str(e):
+                fusion_log.debug(
+                    "ComboKernel benchmark: return True because of loop-carried variable"
+                )
+                return None  # allow fusion
+            else:
+                raise
+
+        # small kernels are very likely to have speedup but hard to benchmark. So we skip benchmarking.
+        small_kernel = ms2 - ms2_clone < 0.3 or ms1 < 0.3
+        if fusion_log.isEnabledFor(logging.DEBUG):
+            if ms1 > ms2 or small_kernel:
+                fusion_log.debug(
+                    "can fuse (benchmark): fusing causes %sx speedup",
+                    green_text(f"{ms1 / ms2:.3f}"),
+                )
+            else:
+                fusion_log.debug(
+                    "cannot fuse (benchmark): fusing causes %sx slowdown",
+                    red_text(f"{ms1 / ms2:.3f}"),
+                )
+        # ms1 returned by benchmark_fused_nodes discounted clone time
+        return (ms2 - ms2_clone, ms1)
 
     def get_buffer_layout(self, buf_name: str) -> ir.Layout:
         buf = self.name_to_buf[buf_name]

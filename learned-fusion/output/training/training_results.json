@@ -1,0 +1,65 @@
+{
+    "config": {
+        "model": "microsoft/codebert-base",
+        "device": "cuda",
+        "batch_size": 16,
+        "gradient_accumulation_steps": 4,
+        "effective_batch_size": 64,
+        "temperature": 0.1,
+        "epochs": 5,
+        "lr": 3e-5,
+        "dropout_prob": 0.2,
+        "token_dropout_prob": 0.15,
+        "max_len": 512,
+        "hf_repo_id": "sameer-n012/cs521-embedding-model",
+        "timestamp": "2025-12-16 06:41:02",
+        "data_size": 18509,
+        "completed": true
+    },
+    "epochs": [
+        {
+            "epoch": 1,
+            "loss": 0.384233,
+            "val_recall_at_1": 0.9534,
+            "val_recall_at_5": 0.9999,
+            "steps": 1156,
+            "time": 865.9318182468414
+        },
+        {
+            "epoch": 2,
+            "loss": 0.010034,
+            "val_recall_at_1": 0.0,
+            "val_recall_at_5": 0.0,
+            "steps": 1156,
+            "time": 837.2823781967163
+        },
+        {
+            "epoch": 3,
+            "loss": 0.007299,
+            "val_recall_at_1": 0.0,
+            "val_recall_at_5": 0.0,
+            "steps": 1156,
+            "time": 837.402987241745
+        },
+        {
+            "epoch": 4,
+            "loss": 0.005683,
+            "val_recall_at_1": 0.0,
+            "val_recall_at_5": 0.0,
+            "steps": 1156,
+            "time": 837.647961139679
+        },
+        {
+            "epoch": 5,
+            "loss": 0.006472,
+            "val_recall_at_1": 0.0,
+            "val_recall_at_5": 0.0,
+            "steps": 1156,
+            "time": 837.7051618099213
+        }
+    ],
+    "best": {
+        "epoch": 1,
+        "val_recall_at_1": 0.9534
+    }
+}
