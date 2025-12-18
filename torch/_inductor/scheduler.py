@@ -5,6 +5,7 @@ import contextlib
 import dataclasses
 import functools
 import inspect
+import io
 import itertools
 import logging
 import math
@@ -4105,7 +4106,27 @@ class Scheduler:
         possible_fusions = self.get_possible_fusions_with_highest_priority(
             possible_fusions
         )
-        possible_fusions.sort(key=self.score_fusion_key, reverse=True)
+        # TODO sameer-n012 changed
+        # possible_fusions.sort(key=self.score_fusion_key, reverse=True)
+
+        buf = io.StringIO()
+        for node in nodes:
+            buf.write(f"\n# {'=' * 40}{node.get_name()} START{'=' * 40} #\n")
+            buf.write(node.debug_str())
+            buf.write(f"\n# {'=' * 40}{node.get_name()} END{'=' * 40} #\n")
+            buf.write("\n\n\n")
+        ir_text = buf.getvalue()
+
+        sort_keys = [
+            V.choices.learned_score_fusion(
+                self, ir_text, possible_fusions, item[0], item[1]
+            )
+            for item in possible_fusions
+        ]
+
+        possible_fusions = [
+            x for _, x in sorted(zip(sort_keys, possible_fusions), reverse=True)
+        ]
 
         def write_ir_file_and_scores(nodes, possible_fusions, file_id=None):
             output_dir = os.environ.get("MY_TORCH_MODEL_OUTPUT_DIR") or ""
@@ -4118,8 +4139,6 @@ class Scheduler:
             with open(
                 os.path.join(output_dir, f"my_ir_test_file_{file_id}.txt"), "w"
             ) as f:
-                import io
-
                 buf = io.StringIO()
                 for node in nodes:
                     buf.write(f"\n# {'=' * 40}{node.get_name()} START{'=' * 40} #\n")
