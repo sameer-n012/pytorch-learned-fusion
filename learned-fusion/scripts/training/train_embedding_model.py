@@ -11,7 +11,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from huggingface_hub import HfApi
-from parser import parse_graph
+from parser import parse_ir_file, preprocess_data
 from torch import nn
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, Dataset
@@ -38,18 +38,6 @@ TOKEN_DROPOUT_PROB = 0.15
 HF_REPO_ID = "sameer-n012/cs521-embedding-model"
 
 
-# preprocessing regex
-NUM_RE = re.compile(r"\b\d+\b")
-SNAKE_RE = re.compile(r"_+")
-
-
-def preprocess_data(text: str) -> str:
-    text = NUM_RE.sub("<NUM>", text)
-    text = SNAKE_RE.sub(" ", text)
-    text = re.sub(r"[ \t]+", " ", text)
-    return text.strip()
-
-
 # Load all files, parse them, and collect node data.
 def load_all_data():
     node_data_lst = set()
@@ -60,7 +48,7 @@ def load_all_data():
 
     for path in file_paths:
         text = Path(path).read_text()
-        nodes = parse_graph(text)
+        nodes = parse_ir_file(text)
 
         for node in nodes.values():
             data = node["data"].strip()
@@ -432,7 +420,7 @@ def paired_recall_at_k(embs1, embs2, k=5):
 def main():
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
     Path(CHECKPOINT_DIR).mkdir(parents=True, exist_ok=True)
-    train_out_file = os.path.join(OUTPUT_DIR, "training_results.json")
+    train_out_file = os.path.join(OUTPUT_DIR, "embedding_training_results.json")
 
     node_data = load_all_data()
     train_data, val_data = train_val_split(node_data, val_frac=0.05)

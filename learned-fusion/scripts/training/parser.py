@@ -1,22 +1,38 @@
 import re
 from typing import Optional
 
-NODE_START_RE = re.compile(
-    r"#\s*=+([a-zA-Z0-9_]+)\s+START=+"
-)
-NODE_END_RE = re.compile(
-    r"#\s*=+([a-zA-Z0-9_]+)\s+END=+"
-)
-NODE_USER_RE = re.compile(
-    r"NodeUser\(node=[A-z]+\(name='([^']+)'\)"
-)
+NODE_START_RE = re.compile(r"#\s*=+([a-zA-Z0-9_]+)\s+START=+")
+NODE_END_RE = re.compile(r"#\s*=+([a-zA-Z0-9_]+)\s+END=+")
+NODE_USER_RE = re.compile(r"NodeUser\(node=[A-z]+\(name='([^']+)'\)")
 
 LAYOUT_RE = re.compile(r".*_layout\s*=\s*FixedLayout")
 SIZES_RE = re.compile(r".*\.sizes\s*=")
 LOOP_BODY_RE = re.compile(r"class\s+([a-zA-Z0-9_]+)[A-z_]*\s*:")
 
+# preprocessing regex
+NUM_RE = re.compile(r"\b\d+\b")
+SNAKE_RE = re.compile(r"_+")
 
-def parse_graph(text: str) -> dict[str, dict]:
+
+def preprocess_data(text: str) -> str:
+    text = NUM_RE.sub("<NUM>", text)
+    text = SNAKE_RE.sub(" ", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    return text.strip()
+
+
+def parse_score_file(text: str):
+    scores = {}
+    for line in text.splitlines():
+        if ":" not in line:
+            continue
+        pair, payload = line.split(":")
+        src, dst = [x.strip() for x in pair.split(",")]
+        scores[(src, dst)] = eval(payload.strip())
+    return scores
+
+
+def parse_ir_file(text: str) -> dict[str, dict]:
     lines = text.splitlines()
     i = 0
     n = len(lines)
@@ -70,8 +86,7 @@ def parse_graph(text: str) -> dict[str, dict]:
                 node_data_lines.append(line)
                 j += 1
                 while j < m and (
-                    entry_lines[j].startswith("    ")
-                    or entry_lines[j].strip() == ""
+                    entry_lines[j].startswith("    ") or entry_lines[j].strip() == ""
                 ):
                     node_data_lines.append(entry_lines[j])
                     j += 1

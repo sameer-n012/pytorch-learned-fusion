@@ -65,3 +65,13 @@ op242_op243_op245_op246_op249.snodes[2] =
 - fusion score looks like `op14_op15, op17_op18: (2, False, 49216, -3)`
     - `node1, node2: (template_score, node1.is_reduction() == node2.is_reduction() and memory_score > 0, memory_score, proximity_score)`
     - higher is better, sorted in tuple order
+
+Formatting AWS disk:
+```
+sudo mkfs.ext4 /dev/nvme1n1
+sudo mkdir -p /mnt/big
+sudo mount /dev/nvme1n1 /mnt/big
+sudo chmod -R 777 /mnt/big
+sudo mkdir /mnt/big/huggingface
+df -h
+```
