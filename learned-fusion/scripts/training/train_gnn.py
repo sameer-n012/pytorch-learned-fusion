@@ -236,50 +236,6 @@ class EdgeGNN(nn.Module):
         return pred
 
 
-def batched_pairwise_ranking_loss(pred, target, batch):
-    """
-    pred: (E,) predicted edge scores
-    target: (E,) ground truth edge scores
-    batch: (E,) tensor indicating which graph each edge belongs to
-    tie_weight: weight for equal-score regularization
-    """
-    unique_graphs = batch.unique()
-    total_loss = 0.0
-    n_graphs = 0
-
-    for g in unique_graphs:
-        mask = batch == g
-        pred_g = pred[mask]
-        target_g = target[mask]
-
-        n = pred_g.numel()
-        if n < 2:
-            continue
-
-        # compute pairwise differences
-        pred_diff = pred_g.unsqueeze(1) - pred_g.unsqueeze(0)
-        target_diff = target_g.unsqueeze(1) - target_g.unsqueeze(0)
-
-        # ranking loss: target[i] > target[j]
-        rank_mask = target_diff > 0
-        rank_loss = F.relu(PAIRWISE_MARGIN - pred_diff)[rank_mask]
-
-        # tie loss: target[i] == target[j]
-        tie_mask = target_diff == 0
-        tie_loss = (pred_diff**2)[tie_mask]
-
-        loss = 0.0
-        if rank_loss.numel() > 0:
-            loss += rank_loss.mean()
-        if tie_loss.numel() > 0:
-            loss += EQUAL_SCORE_REG * tie_loss.mean()
-
-        total_loss += loss
-        n_graphs += 1
-
-    return total_loss / max(n_graphs, 1)
-
-
 def pairwise_ranking_loss(pred, target):
     """
     pred:   (E,)
@@ -385,11 +341,14 @@ def train(train_graphs, val_graphs, results_file=None, batch_size=BATCH_SIZE):
         "config": {
             "device": DEVICE,
             "batch_size": batch_size,
+            "grad_accum_steps": GRAD_ACCUM_STEPS,
+            "effective_batch_size": batch_size * GRAD_ACCUM_STEPS,
             "epochs": EPOCHS,
             "lr": LR,
             "embed_dim": EMBED_DIM,
             "edge_feat_dim": EDGE_FEAT_DIM,
             "equal_score_reg": EQUAL_SCORE_REG,
+            "pairwise_margin": PAIRWISE_MARGIN,
             "hf_repo_id": HF_REPO_ID,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
             "data_size": len(train_graphs),
