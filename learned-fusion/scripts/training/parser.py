@@ -80,7 +80,7 @@ def parse_ir_file(text: str) -> dict[str, dict]:
                 j += 1
                 continue
 
-            # loop body (based on indentation)
+            # loop body
             loop_match = LOOP_BODY_RE.match(line.strip())
             if loop_match:
                 node_data_lines.append(line)

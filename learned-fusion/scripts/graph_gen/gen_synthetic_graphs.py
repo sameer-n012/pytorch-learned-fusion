@@ -1,25 +1,23 @@
 import argparse
 import glob
+import json
 import os
+import random
+import re
 import subprocess
 import time
 import traceback
 from typing import Optional
-import re
-import json
-import random
 
-import torch
-import torch.fx as fx
 import pandas as pd
+import torch
 import torch._inductor.config as iconfig
+import torch.fx as fx
 
 DATA_DIR = "./data/synthetic/"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# ==================================================================
-#  Configure Inductor Debug / Kernel Dump Locations / Logging Levels
-# ==================================================================
+
 os.environ["TORCH_COMPILE_DEBUG"] = "1"
 os.environ["TORCH_LOGS"] = "+inductor,graph,graph_code,aot_graphs,output_code"
 os.environ["TORCHINDUCTOR_AUTOGRAD_CACHE"] = "1"
@@ -38,6 +36,7 @@ os.makedirs(os.path.join(DATA_DIR, "torch_compile_out"), exist_ok=True)
 
 iconfig.trace.enabled = True
 iconfig.trace.graph_diagram = True
+
 
 def random_unop():
     # Randomly choose a unary op
@@ -58,7 +57,6 @@ def random_unop():
         torch.ceil,
         torch.round,
         torch.frac,
-
         # Tensor manipulations
         lambda x: x.transpose(0, 1),
         # lambda x: x.permute(*reversed(range(x.dim()))),
@@ -74,6 +72,7 @@ def random_unop():
 
     return random.choice(ops)
 
+
 def random_binop():
     # Randomly choose a binary op
     ops = [
@@ -85,11 +84,9 @@ def random_binop():
         # torch.remainder,
         # torch.fmod,
         torch.pow,
-
         # Max / Min
         torch.maximum,
         torch.minimum,
-
         # Linear algebra
         # lambda a, b: torch.matmul(*make_matmul_compat(a, b)),
         # lambda a, b: torch.mm(*make_mm_compat(a, b)),
@@ -115,6 +112,7 @@ def make_matmul_compat(a, b):
 
     return a, b
 
+
 def make_mm_compat(a, b):
     # ensure 2D
     a = a.reshape(-1, a.shape[-1])
@@ -124,38 +122,12 @@ def make_mm_compat(a, b):
     b = b[:min_dim, :]
     return a, b
 
-# def make_bmm_compat(a, b):
-#     # Ensure 3D
-#     while a.dim() < 3:
-#         a = a.unsqueeze(0)
-#     while b.dim() < 3:
-#         b = b.unsqueeze(0)
-
-#     # Match batch sizes by taking the minimum
-#     batch = min(a.shape[0], b.shape[0])
-#     a = a[:batch]
-#     b = b[:batch]
-
-#     # Match inner dimensions
-#     min_inner = min(a.shape[2], b.shape[1])
-#     a = a[:, :, :min_inner]
-#     b = b[:, :min_inner, :]
-
-#     return a, b
-
 
 def generate_synthetic_module(num_nodes=5, input_shape=(4, 4)):
-    """
-    Generates a synthetic nn.Module with a random computation graph.
-    """
-
     op_list = [
-        random_unop() if random.random() < 0.5
-        else random_binop()
+        random_unop() if random.random() < 0.5 else random_binop()
         for _ in range(num_nodes)
     ]
-
-    # print(op_list)
 
     class SyntheticModule(torch.nn.Module):
         def __init__(self):
@@ -164,15 +136,12 @@ def generate_synthetic_module(num_nodes=5, input_shape=(4, 4)):
         def forward(self, x):
             tensors = [x]
             for i in range(num_nodes):
-                # Randomly select two tensors to operate on
                 t1 = random.choice(tensors)
                 t2 = random.choice(tensors)
-                # Apply a random operation
                 op = random_binop()
                 print(op)
                 tensors.append(op(t1, t2))
 
-            # Output the last tensor
             return tensors[-1]
 
     return SyntheticModule(), input_shape
@@ -190,9 +159,6 @@ def compile_synthetic(model, example_input):
 
 
 def serialize_fx_graph(graph_module, file_path):
-    """
-    Serializes an fx.GraphModule to a JSON file.
-    """
     graph_dict = {
         "nodes": [],
         "name": graph_module.__class__.__name__,
@@ -215,10 +181,10 @@ def main():
     for i in range(num_graphs):
         try:
             module, input_shape = generate_synthetic_module(
-                # num_nodes=random.randint(4, 8),
-                # input_shape=(random.randint(2, 8), random.randint(2, 8)),
-                num_nodes = 100,
-                input_shape = (64, 64)
+                num_nodes=random.randint(4, 8),
+                input_shape=(random.randint(2, 8), random.randint(2, 8)),
+                num_nodes=100,
+                input_shape=(64, 64),
             )
 
             example_input = generate_sample_input(input_shape).to("cuda")

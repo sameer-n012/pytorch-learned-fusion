@@ -23,9 +23,6 @@ from transformers import (
     GPTNeoXTokenizerFast,
 )
 
-# ==================================================================
-#  Configure Inductor Debug / Kernel Dump Locations / Logging Levels
-# ==================================================================
 os.environ["TORCH_COMPILE_DEBUG"] = "1"
 os.environ["TORCH_LOGS"] = "+inductor,graph,graph_code,aot_graphs,output_code"
 # os.environ["TORCH_LOGS"] = "+inductor,graph"
@@ -41,9 +38,6 @@ iconfig.trace.enabled = True
 iconfig.trace.graph_diagram = True
 
 
-# ==============================================
-# Check that all the expected output files exist
-# ==============================================
 def ensure_expected_files(model_path, directory) -> (bool, Optional[str]):
     expected_output_files = set(
         [
@@ -79,17 +73,9 @@ def ensure_expected_files(model_path, directory) -> (bool, Optional[str]):
     if len(expected_output_files) > 0:
         missing_str += f" Missing files: {expected_output_files}."
 
-    # if model_path == "roberta-large-mnli":
-    #     print(f"Debug: found_my_score_fusion={found_my_score_fusion}, found_my_ir_fusion={found_my_ir_fusion}, expected_output_files={expected_output_files}")
-    #     print(' '.join(os.listdir(directory)))
-    # exit()
-
     return (found_all, missing_str if not found_all else None)
 
 
-# ==========================================================
-# Find all triton kernel files and call objdump if necessary
-# ==========================================================
 def find_triton_kernels(kernel_dir) -> (set, Optional[str]):
     kernels = set()
     kernels_to_disassemble = set()
@@ -188,9 +174,6 @@ def move_inductor_logs(directory) -> (bool, Optional[str]):
     return True, None
 
 
-# ===================================
-# Export Torch.FX Graph For The Model
-# ===================================
 def export_torchfx_graph(
     model, example_inputs, example_inputs_dict, directory, output_file
 ):
@@ -208,9 +191,6 @@ def export_torchfx_graph(
             raise
 
 
-# ===========================================================
-# Compile a model with torch inductor and dump graphs/kernels
-# ===========================================================
 def compile_model(model, example_inputs_dict, name):
     # Compile with torch inductor and run once to make sure kernels generate
     print(f"\t- Compiling with torch inductor")
@@ -224,14 +204,6 @@ def is_encoder_only(model_id: str) -> bool:
     except Exception:
         return False
 
-    # Encoder-only check
-    # https://huggingface.co/docs/transformers/main/en/model_doc/bert#transformers.BertModel
-    # if getattr(config, "is_encoder_decoder", False):
-    #     return False
-    # if getattr(config, "architectures", None):
-    #     archs = [a.lower() for a in config.architectures]
-    #     if any("gpt" in a or "llama" in a or "bloom" in a for a in archs):
-    #         return False
     if getattr(config, "model_type", None) in [
         "clip",
         "vision",
@@ -280,7 +252,7 @@ def get_classes_by_architecture(config):
     elif model_type in {"mra"}:
         return AutoTokenizer, AutoModelForMaskedLM
 
-    # Unknown → assume encoder
+    # if unknown assume encoder
     return AutoTokenizer, AutoModel
 
 
@@ -336,23 +308,9 @@ def main():
 
     output_df = pd.DataFrame(columns=["model", "triton_kernels", "cached", "error"])
 
-    # for chunk in get_models_as_chunks(args.dataset_path, chunk_size=1000):
     for chunk in range(1):
-        # model_list = []
-        # for _, row in chunk.iterrows():
-        #     model_list.append(row["model_id"])
-
         for idx, model_name in enumerate(model_list):
             print(f"Processing {model_name} ({idx + 1}/{len(model_list)})")
-
-            # if not is_encoder_only(model_name):
-            #     print(f"\t- Skipping non-encoder-only model")
-            #     continue
-
-            # model_size = get_model_size(model_name)
-            # if model_size is None or model_size > 20000:  # 20 GB
-            #     print(f"\t- Skipping model larger than 20 GB ({model_size} MB)")
-            #     continue
 
             model_path = model_name.replace("/", "_")
 
@@ -372,10 +330,6 @@ def main():
             # print(f"=== Processing: {model_name} ===")
 
             t_start = time.time()
-
-            # x = ensure_expected_files(model_path, os.path.join(OUTPUT_DIR, model_path))
-            # if not x[0]:
-            #     print(x)
 
             if (
                 ensure_expected_files(model_path, os.path.join(OUTPUT_DIR, model_path))[
@@ -481,16 +435,6 @@ def main():
                     f"\t- [SUCCESS] Finished processing {model_name} ({round(time.time() - t_start, 3)}s)"
                 )
 
-                # if model:
-                #     try:
-                #         del model
-                #     except:
-                #         pass
-                # if tokenizer:
-                #     try:
-                #         del tokenizer
-                #     except:
-                #         pass
                 torch.cuda.empty_cache()
 
                 output_df.to_csv(
@@ -502,14 +446,6 @@ def main():
                     time.sleep(2)
 
             except Exception as e:
-                # try:
-                #     del model
-                # except:
-                #     pass
-                # try:
-                #     del tokenizer
-                # except:
-                #     pass
                 torch.cuda.empty_cache()
 
                 output_df.loc[len(output_df)] = {

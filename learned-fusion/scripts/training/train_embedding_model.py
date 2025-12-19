@@ -153,21 +153,6 @@ class Embedder(nn.Module):
         return nn.functional.normalize(pooled, dim=-1)
 
 
-# use SimCSE loss
-# def simcse_loss(embeddings, temperature=0.07):
-#     embeddings = F.normalize(embeddings, dim=1)
-
-#     sim = embeddings @ embeddings.T
-#     sim /= temperature
-
-#     sim.fill_diagonal_(-1e9)
-
-#     labels = torch.arange(sim.size(0), device=sim.device)
-#     labels = labels ^ 1  # (0<->1, 2<->3, ...)
-
-#     return nn.CrossEntropyLoss()(sim, labels)
-
-
 def simcse_loss(embeddings, labels, temperature):
     embeddings = F.normalize(embeddings, dim=1)
     sim = embeddings @ embeddings.T / temperature
@@ -233,38 +218,6 @@ def train(train_data, val_data, results_file=None):
         pbar = tqdm(loader, desc=f"Epoch {epoch + 1}/{EPOCHS}")
         pbar.set_postfix(loss=f"{total_loss:.4f}")
         for step, batch in enumerate(pbar):
-            # input_ids = torch.cat([batch["input_ids"], batch["input_ids"]], dim=0).to(
-            #     DEVICE
-            # )
-            # attention_mask = torch.cat(
-            #     [batch["attention_mask"], batch["attention_mask"]], dim=0
-            # ).to(DEVICE)
-
-            # embeddings = model(input_ids, attention_mask)
-
-            # emb1 = model(
-            #     batch["input_ids"].to(DEVICE), batch["attention_mask"].to(DEVICE)
-            # )
-            # emb2 = model(
-            #     batch["input_ids"].to(DEVICE), batch["attention_mask"].to(DEVICE)
-            # )
-            # embeddings = torch.cat([emb1, emb2], dim=0)
-
-            # loss = simcse_loss(embeddings, temperature=LOSS_TEMPERATURE)
-
-            # inputs = batch["input_ids"].to(DEVICE)
-            # mask = batch["attention_mask"].to(DEVICE)
-
-            # embeddings = model(
-            #     torch.cat([inputs, inputs], dim=0),
-            #     torch.cat([mask, mask], dim=0),
-            # )
-
-            # labels = torch.arange(inputs.size(0), device=DEVICE)
-            # labels = torch.cat([labels + inputs.size(0), labels], dim=0)
-
-            # loss = simcse_loss(embeddings, labels, temperature=LOSS_TEMPERATURE)
-
             emb1 = model(
                 batch["input_ids_1"].to(DEVICE),
                 batch["attention_mask_1"].to(DEVICE),

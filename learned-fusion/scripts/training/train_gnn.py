@@ -242,10 +242,6 @@ def pairwise_ranking_loss(pred, target):
     target: (E,)
     """
 
-    # valid = target != -1
-    # pred = pred[valid]
-    # target = target[valid]
-
     # target: (E, 4)
     invalid_mask = (
         (target[:, 0] == -1)
@@ -267,43 +263,6 @@ def pairwise_ranking_loss(pred, target):
     # pairwise differences
     pred_diff = pred.unsqueeze(1) - pred.unsqueeze(0)
     target_diff = target.unsqueeze(1) - target.unsqueeze(0)
-
-    # --------------------------------------------------
-    # Discount pairs involving "unknown" edges (target == -1)
-    # --------------------------------------------------
-    # valid_i = target.unsqueeze(1) != -1
-    # valid_j = target.unsqueeze(0) != -1
-    # pair_weight = (valid_i & valid_j).float()
-
-    # Heavily discount (but not zero, for stability)
-    # pair_weight = pair_weight * 1.0 + (1.0 - pair_weight) * 0.05
-    # 0.05 can be smaller (0.01) if you want near-ignore
-
-    # # --------------------------------------------------
-    # # Ranking loss
-    # # --------------------------------------------------
-    # rank_mask = target_diff > 0
-    # rank_loss = F.relu(PAIRWISE_MARGIN - pred_diff)
-
-    # # --------------------------------------------------
-    # # Tie loss
-    # # --------------------------------------------------
-    # tie_mask = target_diff == 0
-    # tie_loss = pred_diff**2
-
-    # loss = 0.0
-
-    # if rank_mask.any():
-    #     loss = loss + (rank_loss[rank_mask] * pair_weight[rank_mask]).mean()
-
-    # if tie_mask.any():
-    #     loss = (
-    #         loss + EQUAL_SCORE_REG * (tie_loss[tie_mask] * pair_weight[tie_mask]).mean()
-    #     )
-
-    # loss = loss - 0.01 * pred.var(unbiased=False)
-
-    # return loss
 
     target_diff = tuple_gt(
         target.unsqueeze(1).expand(-1, n, -1), target.unsqueeze(0).expand(n, -1, -1)
@@ -461,10 +420,6 @@ def validate(model, val_graphs):
 
 @torch.no_grad()
 def _validate_acc(model, val_graphs):
-    """
-    Compute pairwise accuracy over all edges in validation graphs.
-    Accuracy = fraction of correctly ranked pairs according to tuple_gt.
-    """
     model.eval()
     total_acc = 0.0
     total_graphs = 0
@@ -478,16 +433,13 @@ def _validate_acc(model, val_graphs):
         if E < 2:
             continue
 
-        # Compute all pairwise comparisons at once
-        # target_diff[i,j] = True if target[i] > target[j]
         target_gt = tuple_gt(
             target.unsqueeze(1).expand(-1, E, -1), target.unsqueeze(0).expand(E, -1, -1)
         )  # shape (E, E), bool
 
-        # pred_gt[i,j] = True if pred[i] > pred[j]
         pred_gt = pred.unsqueeze(1) > pred.unsqueeze(0)  # shape (E, E), bool
 
-        # Only consider pairs where target_gt is True
+        # only consider pairs where target_gt is True
         correct_pairs = (pred_gt & target_gt).sum().item()
         total_pairs = target_gt.sum().item()
 
@@ -501,9 +453,6 @@ def _validate_acc(model, val_graphs):
 
 @torch.no_grad()
 def _validate_corr(model, val_graphs, device=DEVICE):
-    """
-    Compute average Spearman rank correlation across graphs.
-    """
     model.eval()
     correlations = []
 
@@ -516,7 +465,6 @@ def _validate_corr(model, val_graphs, device=DEVICE):
             if pred.numel() < 2:
                 continue
 
-            # Convert to numpy for Spearman correlation
             pred_np = pred.cpu().numpy()
             target_np = target.cpu().numpy()
 

@@ -45,12 +45,7 @@ inputs = [
 ]
 
 
-# ===========================================================
-# Compile a model with torch inductor and dump graphs/kernels
-# ===========================================================
 def compile_model(model, example_inputs_dict, name):
-    # Compile with torch inductor and run once to make sure kernels generate
-
     s = (
         "default"
         if os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION") == "1"

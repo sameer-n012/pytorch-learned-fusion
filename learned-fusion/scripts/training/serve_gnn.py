@@ -21,7 +21,6 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def ensure_model(repo_id: str, local_dir: str):
-    """Download HF repo if local directory does not exist."""
     if not Path(local_dir).exists():
         print(f"Downloading {repo_id} → {local_dir}")
         snapshot_download(
@@ -32,6 +31,9 @@ def ensure_model(repo_id: str, local_dir: str):
 
 
 def load_models():
+    os.makedirs(LOCAL_GNN_DIR, exist_ok=True)
+    os.makedirs(LOCAL_EMBED_DIR, exist_ok=True)
+
     ensure_model(HF_GNN_REPO, LOCAL_GNN_DIR)
     ensure_model(HF_EMBED_REPO, LOCAL_EMBED_DIR)
 
