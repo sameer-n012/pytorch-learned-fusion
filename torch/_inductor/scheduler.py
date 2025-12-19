@@ -4117,16 +4117,25 @@ class Scheduler:
             buf.write("\n\n\n")
         ir_text = buf.getvalue()
 
-        sort_keys = [
-            V.choices.learned_score_fusion(
+        scores = {
+            item: V.choices.learned_score_fusion(
                 self, ir_text, possible_fusions, item[0], item[1]
             )
             for item in possible_fusions
-        ]
+        }
 
-        possible_fusions = [
-            x for _, x in sorted(zip(sort_keys, possible_fusions), reverse=True)
-        ]
+        possible_fusions.sort(key=lambda item: scores[item], reverse=True)
+
+        # sort_keys = [
+        #     V.choices.learned_score_fusion(
+        #         self, ir_text, possible_fusions, item[0], item[1]
+        #     )
+        #     for item in possible_fusions
+        # ]
+
+        # possible_fusions = [
+        #     x for _, x in sorted(zip(sort_keys, possible_fusions), reverse=True)
+        # ]
 
         def write_ir_file_and_scores(nodes, possible_fusions, file_id=None):
             output_dir = os.environ.get("MY_TORCH_MODEL_OUTPUT_DIR") or ""
@@ -4157,20 +4166,28 @@ class Scheduler:
                         f"{item[0].get_name()}, {item[1].get_name()}: {self.score_fusion_key(item)}\n"
                     )
 
-            if os.environ.get("MY_TORCH_DO_BENCHMARKS"):
-                with open(
-                    os.path.join(
-                        output_dir, f"my_score_fusions_test_file_{file_id}.txt"
-                    ),
-                    "w",
-                ) as f:
-                    for item in possible_fusions:
-                        fused_time, unfused_time = self.benchmark_kernel_get_times(item)
-                        f.write(
-                            f"{item[0].get_name()}, {item[1].get_name()}: ({fused_time}, {unfused_time})\n"
-                        )
+            if os.environ.get("MY_TORCH_DO_BENCHMARKS", "0") == "1":
+                try:
+                    with open(
+                        os.path.join(
+                            output_dir, f"my_benchmark_fusions_test_file_{file_id}.txt"
+                        ),
+                        "w",
+                    ) as f:
+                        for item in possible_fusions:
+                            fused_time, unfused_time = self.benchmark_kernel_get_times(
+                                item
+                            )
+                            f.write(
+                                f"{item[0].get_name()}, {item[1].get_name()}: ({unfused_time - fused_time}, True, 0, 0)\n"
+                            )
+                except Exception as e:
+                    print("Exception during benchmarking fusions:", e)
 
-        if len(possible_fusions):
+        if (
+            len(possible_fusions)
+            and os.environ.get("MY_TORCH_SHOW_IR_FUSION_SCORES", "0") == "1"
+        ):
             write_ir_file_and_scores(nodes, possible_fusions)
 
         fusion_log.debug("found %d possible fusions", len(possible_fusions))

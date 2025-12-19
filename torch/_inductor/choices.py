@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import os
+import random
 import typing
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 import requests
 import sympy
-from torch_geometric.data.collate import SliceDictType
 
 import torch
 from torch._inductor.runtime.runtime_utils import next_power_of_2
@@ -575,6 +576,7 @@ class InductorChoices:
         return True
 
     learned_fusion_cache: dict[str, dict[tuple[str, str], Sortable]] = {}
+    random.seed(123)
 
     # TODO sameer-n012 added
     @staticmethod
@@ -586,7 +588,7 @@ class InductorChoices:
         node2: BaseSchedulerNode,
     ) -> Sortable:
         """
-        Assign a score (higher comes first) to the fusion of node1 and node2
+        Assign a score (higher is better) to the fusion of node1 and node2
         using a learned model.
 
         Creates text in the format:
@@ -602,7 +604,22 @@ class InductorChoices:
             fusable_node_1, fusable_node_2: score
 
         Maintains a cache of previous requests to avoid duplicate querying.
+        Only triggers if the environment variable TORCH_USE_DEFAULT_SCORE_FUSION is not set to "1".
         """
+
+        if os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION", "0") == "1":
+            return InductorChoices.score_fusion(
+                scheduler=scheduler,
+                node1=node1,
+                node2=node2,
+            )
+        elif os.environ.get("TORCH_USE_RANDOM_SCORE_FUSION", "0") == "1":
+            return (
+                random.random(),
+                True,
+                0,
+                0,
+            )
 
         edge_data = "\n".join(
             [
@@ -621,14 +638,16 @@ class InductorChoices:
         )
 
         try:
-
             if request_text in InductorChoices.learned_fusion_cache:
+                # print("Using cached learned fusion score...")
                 score_dict = InductorChoices.learned_fusion_cache[request_text]
                 score = score_dict.get((node1.get_name(), node2.get_name()), None)
                 if score is None:
                     score = score_dict.get((node2.get_name(), node1.get_name()), None)
                 if score is not None:
                     return score
+
+            # print("Querying learned fusion model...")
 
             response = requests.post(
                 "http://localhost:3031/infer",
@@ -641,7 +660,12 @@ class InductorChoices:
             for line in score_lines:
                 key, score_str = line.split(":")
                 n1, n2 = key.strip().split(",")
-                score_dict[(n1.strip(), n2.strip())] = (float(score_str.strip()), True, 0, 0)
+                score_dict[(n1.strip(), n2.strip())] = (
+                    float(score_str.strip()),
+                    True,
+                    0,
+                    0,
+                )
 
             InductorChoices.learned_fusion_cache[request_text] = score_dict
 
@@ -658,7 +682,6 @@ class InductorChoices:
 
         except (requests.exceptions.RequestException, ValueError) as e:
             print(f"Error querying learned fusion model: {e}")
-            n1 =
             return InductorChoices.score_fusion(
                 scheduler=scheduler,
                 node1=node1,

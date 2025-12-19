@@ -10,9 +10,18 @@ from typing import Optional
 import pandas as pd
 import torch
 import torch._inductor.config as iconfig
-from transformers import AutoConfig, AutoModel, AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2SeqLM, GPTNeoXForCausalLM, GPTNeoXTokenizerFast, AutoModelForSequenceClassification, AutoModelForMaskedLM
-
 from models import model_list
+from transformers import (
+    AutoConfig,
+    AutoModel,
+    AutoModelForCausalLM,
+    AutoModelForMaskedLM,
+    AutoModelForSeq2SeqLM,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    GPTNeoXForCausalLM,
+    GPTNeoXTokenizerFast,
+)
 
 # ==================================================================
 #  Configure Inductor Debug / Kernel Dump Locations / Logging Levels
@@ -25,6 +34,8 @@ os.environ["TORCHINDUCTOR_FX_GRAPH_CACHE"] = "1"
 os.environ["TORCHINDUCTOR_SAVE_OPERATORS"] = "1"
 os.environ["TRITON_SAVE_TTIR"] = "1"
 os.environ["TORCHINDUCTOR_FX_COMPILE_MODE"] = "SERIALIZE"
+os.environ["MY_TORCH_DO_BENCHMARKS"] = "1"
+os.environ["MY_TORCH_SHOW_IR_FUSION_SCORES"] = "1"
 
 iconfig.trace.enabled = True
 iconfig.trace.graph_diagram = True
@@ -239,10 +250,30 @@ def get_classes_by_architecture(config):
 
     model_type = config.model_type
 
-    if model_type in {"bert", "roberta", "deberta", "deberta-v2", "electra",
-                      "albert", "mpnet", "minilm", "ernie", "biobert"}:
+    if model_type in {
+        "bert",
+        "roberta",
+        "deberta",
+        "deberta-v2",
+        "electra",
+        "albert",
+        "mpnet",
+        "minilm",
+        "ernie",
+        "biobert",
+    }:
         return AutoTokenizer, AutoModel
-    elif model_type in {"gpt2", "gpt_neo", "gptj", "bloom", "opt", "llama", "phi", "mt5", "t5"}:
+    elif model_type in {
+        "gpt2",
+        "gpt_neo",
+        "gptj",
+        "bloom",
+        "opt",
+        "llama",
+        "phi",
+        "mt5",
+        "t5",
+    }:
         return AutoTokenizer, AutoModelForCausalLM
     elif model_type in {"gpt_neox"}:
         return GPTNeoXTokenizerFast, GPTNeoXForCausalLM
@@ -382,10 +413,11 @@ def main():
                     trust_remote_code=True,
                     # load_in_4bit=True,
                 )
-                model = model_class.from_pretrained(
-                    model_name,
-                    trust_remote_code=True
-                ).eval().to("cuda")
+                model = (
+                    model_class.from_pretrained(model_name, trust_remote_code=True)
+                    .eval()
+                    .to("cuda")
+                )
 
                 # Tokenize sample inputs
                 encoded = tokenizer("This is a test input.", return_tensors="pt")

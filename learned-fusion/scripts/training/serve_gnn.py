@@ -101,7 +101,6 @@ def infer():
 
     with torch.no_grad():
         pred = gnn(graph.to(DEVICE)).cpu()
-        print("INFER STD:", pred.std().item(), pred.min().item(), pred.max().item())
         pred = (-pred).tolist()
 
     # reconstruct edge names
