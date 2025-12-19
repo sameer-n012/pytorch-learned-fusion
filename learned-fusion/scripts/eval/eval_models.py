@@ -1,38 +1,38 @@
 model_list = [
-    # "bert-base-uncased",
-    # "bert-large-uncased",
-    # "bert-base-cased",
-    # # DistilBERT
-    # "distilbert-base-uncased",
-    # "distilbert-base-cased",
-    # # RoBERTa
-    # "roberta-base",
-    # "roberta-large",
-    # "roberta-large-mnli",
-    # # ALBERT
-    # "albert-large-v1",
-    # "albert-large-v2",
-    # # DeBERTa
-    # "microsoft/deberta-base",
-    # "microsoft/deberta-large",
-    # "microsoft/deberta-v3-base",
-    # "microsoft/deberta-v3-large",
-    # "microsoft/deberta-v2-xlarge",
-    # # GPT-2
-    # "gpt2",
-    # "gpt2-medium",
-    # "gpt2-large",
-    # "gpt2-xl",
-    # "distilgpt2",
-    # # XLNet
-    # "xlnet-base-cased",
-    # "xlnet-large-cased",
-    # # MiniLM
-    # "nreimers/MiniLM-L6-H384-uncased",
-    # "nreimers/mMiniLMv2-L6-H384-distilled-from-XLMR-Large",
+    "bert-base-uncased",
+    "bert-large-uncased",
+    "bert-base-cased",
+    # DistilBERT
+    "distilbert-base-uncased",
+    "distilbert-base-cased",
+    # RoBERTa
+    "roberta-base",
+    "roberta-large",
+    "roberta-large-mnli",
+    # ALBERT
+    "albert-large-v1",
+    "albert-large-v2",
+    # DeBERTa
+    "microsoft/deberta-base",
+    "microsoft/deberta-large",
+    "microsoft/deberta-v3-base",
+    "microsoft/deberta-v3-large",
+    "microsoft/deberta-v2-xlarge",
+    # GPT-2
+    "gpt2",
+    "gpt2-medium",
+    "gpt2-large",
+    "gpt2-xl",
+    "distilgpt2",
+    # XLNet
+    "xlnet-base-cased",
+    "xlnet-large-cased",
+    # MiniLM
+    "nreimers/MiniLM-L6-H384-uncased",
+    "nreimers/mMiniLMv2-L6-H384-distilled-from-XLMR-Large",
     # XLM / XLM-R
-    "xlm-mlm-100-1280",
-    "xlm-roberta-base",
+    # "xlm-mlm-100-1280",
+    # "xlm-roberta-base",
     # Code Models
     "microsoft/codebert-base",
     # Sentence Transformers

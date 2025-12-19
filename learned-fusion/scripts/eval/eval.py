@@ -50,11 +50,15 @@ inputs = [
 # ===========================================================
 def compile_model(model, example_inputs_dict, name):
     # Compile with torch inductor and run once to make sure kernels generate
+
     s = (
         "default"
-        if os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION")
-        else "learned fusion"
+        if os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION") == "1"
+        else "random"
+        if os.environ.get("TORCH_USE_RANDOM_SCORE_FUSION") == "1"
+        else "learned"
     )
+
     print(f"\t- Compiling with torch inductor ({s})")
     ts = time.time()
     compiled = torch.compile(model, backend="inductor", fullgraph=False)
@@ -185,7 +189,6 @@ def main():
 
         t_start = time.time()
 
-        lf = os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION") != "1"
         score_fusion_type = (
             "default"
             if os.environ.get("TORCH_USE_DEFAULT_SCORE_FUSION") == "1"
@@ -226,31 +229,32 @@ def main():
             )
             encoded_dict = {k: v.to("cuda") for k, v in encoded.items()}
 
-            compiled, tc = compile_model(model, encoded_dict, model_path)
+            for i in range(10):
+                compiled, tc = compile_model(model, encoded_dict, model_path)
 
-            tr = time_model_run(compiled, tokenizer, repeats=10)
+                tr = time_model_run(compiled, tokenizer, repeats=10)
 
-            output_df.loc[len(output_df)] = {
-                "model": model_name,
-                "score_fusion_type": score_fusion_type,
-                "compile_time": tc,
-                "run_time_mean": np.mean(tr),
-                "run_time_se": st.sem(tr),
-                "errors": None,
-            }
+                output_df.loc[len(output_df)] = {
+                    "model": model_name,
+                    "score_fusion_type": score_fusion_type,
+                    "compile_time": tc,
+                    "run_time_mean": np.mean(tr),
+                    "run_time_se": st.sem(tr),
+                    "errors": None,
+                }
+
+                torch.cuda.empty_cache()
+
+                output_df.to_csv(
+                    os.path.join(OUTPUT_DIR, f"evaluation_results_{run_id}.csv"),
+                    index=False,
+                )
+
+                time.sleep(2)
 
             print(
                 f"\t- [SUCCESS] Finished processing {model_name} ({round(time.time() - t_start, 3)}s)"
             )
-
-            torch.cuda.empty_cache()
-
-            output_df.to_csv(
-                os.path.join(OUTPUT_DIR, f"evaluation_results_{run_id}.csv"),
-                index=False,
-            )
-
-            time.sleep(2)
 
         except Exception as e:
             torch.cuda.empty_cache()

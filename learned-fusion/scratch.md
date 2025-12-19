@@ -71,7 +71,7 @@ Formatting AWS disk:
 sudo mkfs.ext4 /dev/nvme1n1
 sudo mkdir -p /mnt/big
 sudo mount /dev/nvme1n1 /mnt/big
-sudo chmod -R 777 /mnt/big
 sudo mkdir /mnt/big/huggingface
+sudo chmod -R 777 /mnt/big
 df -h
 ```
